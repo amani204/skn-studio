@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Playfair_Display_SC, Inter } from "next/font/google";
 import Navbar from "@/components/storefront/Navbar";
+import CartSlider from "@/components/storefront/CartSlider";
+import { CartProvider } from "@/context/CartContext";
 import Footer from "@/components/storefront/Footer";
 import "./globals.css";
 
-// Playfair Display SC only ships weight 400 — that's expected, it's a
-// display/small-caps cut, not a full text family.
 const playfair = Playfair_Display_SC({
   subsets: ["latin"],
   weight: "400",
@@ -31,9 +31,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body>
-        <Navbar />
-        {children}
-        <Footer />
+        <CartProvider>
+          <Navbar />
+          <CartSlider />
+          {children}
+        </CartProvider>
+        <Footer/>
       </body>
     </html>
   );

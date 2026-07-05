@@ -95,7 +95,7 @@ export default function BrandStatement() {
           ref={imageRef}
           className="relative h-80 w-full overflow-hidden rounded-lg sm:h-105 md:w-[90%] md:justify-self-end"
         >
-          <Image src="/about-texture.jpg" alt="Formulation SKN Studio, détail" fill className="object-cover" />
+          <Image src="/image5.jpg" alt="Formulation SKN Studio, détail" fill className="object-cover" />
         </div>
       </div>
     </section>
