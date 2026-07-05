@@ -6,10 +6,10 @@ import gsap from "gsap";
 import { Search, ShoppingBag, Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Shop", href: "/shop" },
-  { label: "About Us", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Accueil", href: "/#home" },
+  { label: "Boutique", href: "/shop" },
+  { label: "À propos", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
@@ -27,6 +27,31 @@ export default function Navbar() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const mobileLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const menuLogoRef = useRef<HTMLDivElement>(null);
+
+  // ==================== SMOOTH SCROLL FUNCTION ====================
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    
+    // Close mobile menu if open
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    }
+    
+    // Get the target element
+    const targetId = href.replace('/', '').replace('#', '');
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      // Smooth scroll to target
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    } else {
+      // If no element found, navigate to the page
+      window.location.href = href;
+    }
+  };
 
   // ==================== NAVBAR ENTRANCE ANIMATION ====================
   useEffect(() => {
@@ -64,9 +89,7 @@ export default function Navbar() {
         paddingBottom: scrolled ? "0.4rem" : "0.9rem",
         paddingLeft: scrolled ? "1.5rem" : "2rem",
         paddingRight: scrolled ? "1.5rem" : "2rem",
-        // Width shrinks on scroll
         maxWidth: scrolled ? "90%" : "100%",
-        // Keep background the same
         backgroundColor: "rgba(246, 244, 240, 0.45)",
         boxShadow: scrolled
           ? "0 8px 30px -12px rgba(24,24,24,0.18)"
@@ -195,6 +218,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={(e) => handleSmoothScroll(e, link.href)}
                 onMouseEnter={() => handleEnter(i)}
                 onMouseLeave={() => handleLeave(i)}
                 className="relative text-sm font-medium tracking-wide text-ink/80 transition-colors hover:text-navy"
@@ -213,13 +237,13 @@ export default function Navbar() {
           {/* Icons - Right aligned */}
           <div ref={iconsRef} className="flex items-center justify-end gap-3 sm:gap-5">
             <button
-              aria-label="Search"
+              aria-label="Rechercher"
               className="text-ink/80 transition-colors hover:text-navy"
             >
               <Search size={16} strokeWidth={1.6} />
             </button>
             <button
-              aria-label="Cart"
+              aria-label="Panier"
               className="text-ink/80 transition-colors hover:text-navy relative"
             >
               <ShoppingBag size={16} strokeWidth={1.6} />
@@ -228,11 +252,11 @@ export default function Navbar() {
               </span>
             </button>
 
-            {/* Basic Mobile Menu Toggle - Just the Menu icon */}
+            {/* Basic Mobile Menu Toggle */}
             <button
               onClick={toggleMobileMenu}
               className="md:hidden text-ink/80 transition-colors hover:text-navy"
-              aria-label="Toggle menu"
+              aria-label="Menu"
             >
               {isMobileMenuOpen ? (
                 <X size={20} strokeWidth={1.6} />
@@ -251,7 +275,7 @@ export default function Navbar() {
         onClick={closeMobileMenu}
       />
 
-      {/* ===== MOBILE MENU PANEL - Cleaner Style ===== */}
+      {/* ===== MOBILE MENU PANEL ===== */}
       <div
         ref={menuRef}
         className="fixed top-0 right-0 z-50 h-full w-75 sm:w-90 bg-[#F6F4F0] px-8 py-12 shadow-2xl translate-x-full opacity-0"
@@ -261,12 +285,12 @@ export default function Navbar() {
         <button
           onClick={closeMobileMenu}
           className="absolute top-6 right-6 backdrop-blur-sm flex items-center justify-center text-ink/80 transition-all hover:text-navy"
-          aria-label="Close menu"
+          aria-label="Fermer le menu"
         >
           <X size={18} strokeWidth={1.6} />
         </button>
 
-        {/* Logo - Clean, no decorative lines */}
+        {/* Logo */}
         <div ref={menuLogoRef} className="mb-12 text-center">
           <Link
             href="/"
@@ -277,7 +301,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile Links - Clean style */}
+        {/* Mobile Links */}
         <nav className="flex flex-col gap-2">
           {NAV_LINKS.map((link, i) => (
             <Link
@@ -286,7 +310,10 @@ export default function Navbar() {
                 mobileLinksRef.current[i] = el;
               }}
               href={link.href}
-              onClick={closeMobileMenu}
+              onClick={(e) => {
+                handleSmoothScroll(e, link.href);
+                closeMobileMenu();
+              }}
               className="group relative px-4 py-3 text-sm font-light tracking-wide text-ink/70 transition-all hover:text-navy hover:pl-6"
               style={{ opacity: 0, x: 40 }}
             >
@@ -304,7 +331,7 @@ export default function Navbar() {
         {/* Footer */}
         <div className="absolute bottom-6 left-8 right-8 flex flex-col items-center gap-1 text-xs text-ink/30 border-t border-ink/10 pt-4">
           <span>© 2026 SKN Studio</span>
-          <span className="text-[10px] tracking-widest">By Amani</span>
+          <span className="text-[10px] tracking-widest">Par Amani</span>
         </div>
       </div>
     </>

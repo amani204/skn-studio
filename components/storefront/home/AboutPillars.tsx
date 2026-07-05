@@ -12,24 +12,24 @@ if (typeof window !== "undefined") {
 const PILLARS = [
   {
     id: "ingredients",
-    label: "Ingredients",
+    label: "Ingrédients",
     image: "/about/ingredients.jpg",
     description:
-      "No more than five active ingredients per formula, each backed by clinical research. No fillers, no fragrance, no fuss.",
+      "Cinq ingrédients actifs maximum par formule, chacun soutenu par la recherche clinique. Pas de charges, pas de parfum, pas de complications.",
   },
   {
     id: "process",
-    label: "Process",
+    label: "Processus",
     image: "/about/process.jpg",
     description:
-      "Every formula is developed with dermatologists and tested on real skin, not just in a lab, before it reaches our shelves.",
+      "Chaque formule est développée avec des dermatologues et testée sur de vraies peaux, pas seulement en laboratoire, avant d'arriver dans nos rayons.",
   },
   {
     id: "promise",
-    label: "Promise",
+    label: "Promesse",
     image: "/about/promise.jpg",
     description:
-      "If it doesn't work for your skin, we'll refund it. No forms, no fine print — that's the SKN Studio guarantee.",
+      "Si cela ne fonctionne pas pour votre peau, nous vous remboursons. Sans formulaires, sans conditions — c'est la garantie SKN Studio.",
   },
 ];
 
@@ -58,7 +58,7 @@ function PillarCard({ pillar }: { pillar: (typeof PILLARS)[number] }) {
     <div
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
-      className="pillar-card relative h-[420px] w-full overflow-hidden rounded-lg"
+      className="pillar-card relative h-105 w-full overflow-hidden rounded-lg"
     >
       <Image src={pillar.image} alt={pillar.label} fill className="object-cover" />
 
@@ -106,10 +106,12 @@ export default function AboutPillars() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="mx-auto max-w-7xl px-4 py-24 sm:px-8">
+    <section id="about" ref={sectionRef} className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-20">
       <div className="mb-12 text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-blue">About Us</p>
-        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">What Goes Into SKN Studio</h2>
+        <p className="text-xs uppercase tracking-[0.3em] text-blue">À propos</p>
+        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+          Ce qui se cache dans SKN Studio
+        </h2>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

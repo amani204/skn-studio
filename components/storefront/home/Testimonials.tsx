@@ -11,19 +11,19 @@ if (typeof window !== "undefined") {
 
 const TESTIMONIALS = [
   {
-    quote: "My skin finally calmed down after switching to the Barrier Serum. Three weeks in and the redness is gone.",
+    quote: "Ma peau s'est enfin apaisée après avoir utilisé le Sérum Barrière. Trois semaines plus tard, les rougeurs ont disparu.",
     name: "Amara T.",
-    tag: "Verified Buyer",
+    tag: "Achat vérifié",
   },
   {
-    quote: "I've tried every serum on the market. This is the first one that didn't break me out.",
+    quote: "J'ai essayé tous les sérums du marché. C'est le premier qui ne m'a pas provoqué d'éruptions.",
     name: "Leila K.",
-    tag: "Verified Buyer",
+    tag: "Achat vérifié",
   },
   {
-    quote: "Simple routine, real results. I don't miss my old ten-step routine at all.",
+    quote: "Une routine simple, des résultats réels. Mon ancienne routine en dix étapes ne me manque pas du tout.",
     name: "Sofia M.",
-    tag: "Verified Buyer",
+    tag: "Achat vérifié",
   },
 ];
 
@@ -54,11 +54,11 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-powder/15 px-4 py-24 sm:px-8">
+    <section id="reviews" ref={sectionRef} className="bg-powder/15 px-4 py-16 sm:px-8 sm:py-20">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
-          <p className="text-xs uppercase tracking-[0.3em] text-blue">Reviews</p>
-          <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">Our Customers Say</h2>
+          <p className="text-xs uppercase tracking-[0.3em] text-blue">Avis</p>
+          <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">Ce que nos clientes disent</h2>
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

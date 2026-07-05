@@ -53,7 +53,7 @@ export default function BrandStatement() {
         }
       );
 
-      // Slow parallax drift on the background wordmark as the section scrolls by
+      // Slow parallax drift
       gsap.to(bgTextRef.current, {
         y: -60,
         ease: "none",
@@ -70,31 +70,32 @@ export default function BrandStatement() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden py-32 sm:py-40">
+    <section  ref={sectionRef} className="relative overflow-hidden py-16 sm:py-20">
       <h2
         ref={bgTextRef}
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 flex select-none items-center justify-center whitespace-nowrap font-display uppercase text-navy/10"
-        style={{ fontSize: "clamp(4rem, 18vw, 14rem)" }}
+        style={{ fontSize: "clamp(4rem, 16vw, 14rem)" }}
       >
         SKN Studio
       </h2>
 
       <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 sm:px-8 md:grid-cols-2">
         <div ref={textRef}>
-          <p className="text-xs uppercase tracking-[0.3em] text-blue">Our Philosophy</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-blue">Notre Philosophie</p>
           <p className="mt-4 max-w-md font-body text-lg leading-relaxed text-ink">
-            We believe skincare should be honest — fewer ingredients, clearly
-            labeled, formulated to do exactly what they claim. No twelve-step
-            routines, no filler actives. Just what your skin actually uses.
+            Nous croyons que les soins de la peau devraient être honnêtes — 
+            moins d'ingrédients, clairement étiquetés, formulés pour faire 
+            exactement ce qu'ils promettent. Pas de routines en douze étapes, 
+            pas d'actifs inutiles. Juste ce dont votre peau a réellement besoin.
           </p>
         </div>
 
         <div
           ref={imageRef}
-          className="relative h-[320px] w-full overflow-hidden rounded-lg sm:h-[420px] md:w-[90%] md:justify-self-end"
+          className="relative h-80 w-full overflow-hidden rounded-lg sm:h-105 md:w-[90%] md:justify-self-end"
         >
-          <Image src="/about-texture.jpg" alt="SKN Studio formulation, close detail" fill className="object-cover" />
+          <Image src="/about-texture.jpg" alt="Formulation SKN Studio, détail" fill className="object-cover" />
         </div>
       </div>
     </section>

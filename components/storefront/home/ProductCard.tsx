@@ -13,40 +13,57 @@ export function ProductCard({ slug, name, price, oldPrice, imageUrl }: ProductCa
   return (
     <Link
       href={`/products/${slug}`}
-      className="group block overflow-hidden rounded-lg border border-brand-border bg-brand-surface transition hover:shadow-md"
+      className="group block overflow-hidden rounded-lg border border-powder/40 bg-white/50 transition-all hover:border-blue/20 hover:bg-white/80 hover:shadow-sm"
     >
-      <div className="relative aspect-square w-full overflow-hidden bg-brand-bg">
+      <div className="relative aspect-square w-full overflow-hidden bg-powder/20">
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={name}
             fill
             sizes="(max-width: 768px) 50vw, 25vw"
-            className="object-cover transition duration-300 group-hover:scale-105"
+            className="object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-brand-text-muted">
-            No image
+          <div className="flex h-full items-center justify-center text-sm text-ink/40">
+            Pas d'image
           </div>
         )}
         {oldPrice && (
-          <span className="absolute left-2 top-2 rounded-full bg-brand-accent px-2 py-0.5 text-xs font-medium text-brand-text">
-            Sale
+          <span className="absolute left-2 top-2 rounded-full bg-navy/10 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-navy">
+            Promo
           </span>
         )}
       </div>
 
-      <div className="p-3">
-        <h3 className="truncate text-sm font-medium text-brand-text">{name}</h3>
-        <div className="mt-1 flex items-center gap-2">
-          <span className="text-sm font-semibold text-brand-text">
-            {price.toFixed(2)} DA
-          </span>
-          {oldPrice && (
-            <span className="text-xs text-brand-text-muted line-through">
-              {oldPrice.toFixed(2)} DA
-            </span>
-          )}
+      <div className="p-4">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <h3 className="font-display text-base text-ink">{name}</h3>
+            <div className="mt-1 flex items-center gap-2">
+              <span className="text-sm font-medium text-navy">
+                {price.toFixed(2)} DA
+              </span>
+              {oldPrice && (
+                <span className="text-xs text-ink/40 line-through">
+                  {oldPrice.toFixed(2)} DA
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Minimal Add Button */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              // Handle add to cart here
+              console.log("Added to cart:", slug);
+            }}
+            className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-full border border-navy/15 text-navy/40 transition-all hover:border-navy/40 hover:bg-navy hover:text-white hover:shadow-sm flex-shrink-0"
+            aria-label="Ajouter au panier"
+          >
+            <span className="text-base leading-none">+</span>
+          </button>
         </div>
       </div>
     </Link>

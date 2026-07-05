@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
+import Marquee from "./Marquee";
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -52,7 +53,7 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
-  // ==================== FLOATING CARD ANIMATION - SLOWER ====================
+  // ==================== FLOATING CARD ANIMATION ====================
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.to(cardRef.current, {
@@ -68,15 +69,15 @@ export default function Hero() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative w-full pb-32 pt-0">
+    <section id="home" ref={sectionRef} className="relative w-full pb-16 pt-0 sm:pb-20">
       {/* Image Container - Full Width */}
       <div
         ref={imageWrapRef}
         className="relative h-[85vh] w-full overflow-hidden sm:h-[90vh]"
       >
         <Image
-          src="/"
-          alt="SKN Studio skincare"
+          src="/hero-skincare.jpg"
+          alt="SKN Studio soins de la peau"
           fill
           priority
           className="object-cover"
@@ -96,22 +97,22 @@ export default function Hero() {
             SKN STUDIO
           </h1>
 
-          {/* Subtitle - Pure. Simple. Skin. */}
+          {/* Subtitle */}
           <p
             ref={subtitleRef}
             className="mt-3 max-w-md text-xs uppercase tracking-[0.3em] text-white/70 sm:text-sm"
           >
-            Pure. Simple. Skin.
+            Pur. Simple. Peau.
           </p>
 
-          {/* Description - Categories as a descriptive paragraph */}
+          {/* Description */}
           <p
             ref={descriptionRef}
             className="mt-6 max-w-2xl text-xs font-light leading-relaxed text-white/50 sm:text-sm"
           >
-            Curated skincare essentials — from gentle cleansers to nourishing serums, 
-            hair & body care, and thoughtful accessories. Discover clean beauty 
-            rooted in simplicity.
+            Des essentiels de soin soigneusement sélectionnés — des nettoyants doux 
+            aux sérums nourrissants, en passant par les soins du corps et des 
+            accessoires. Découvrez une beauté propre ancrée dans la simplicité.
           </p>
         </div>
 
@@ -122,21 +123,22 @@ export default function Hero() {
             className="w-64 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 p-5 shadow-xl"
           >
             <p className="text-[10px] font-body uppercase tracking-[0.2em] text-white/60">
-              Featured
+              À l'honneur
             </p>
-            <h3 className="mt-1 font-display text-lg text-white">The SKN Serum</h3>
+            <h3 className="mt-1 font-display text-lg text-white">Le Sérum SKN</h3>
             <p className="mt-1 text-xs text-white/60">
-              Three active ingredients. Calmer skin in 14 days.
+              Trois ingrédients actifs. Une peau plus calme en 14 jours.
             </p>
             <Link
               href="/shop"
               className="mt-3 inline-block text-xs font-medium text-white/80 transition-colors hover:text-white"
             >
-              Shop Now →
+              Acheter →
             </Link>
           </div>
         </div>
       </div>
+      <Marquee />
     </section>
   );
 }

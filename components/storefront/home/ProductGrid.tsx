@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -12,33 +13,33 @@ if (typeof window !== "undefined") {
 const PRODUCTS = [
   {
     id: "barrier-serum",
-    name: "The Barrier Serum",
-    price: "$58",
-    description: "Calms redness and strengthens the skin barrier.",
+    name: "Le Sérum Barrière",
+    price: "4000 DA",
+    description: "Calme les rougeurs et renforce la barrière cutanée.",
     imageFront: "/products/serum-front.jpg",
     imageBack: "/products/serum-texture.jpg",
   },
   {
     id: "cloud-cleanser",
-    name: "Cloud Cleanser",
-    price: "$32",
-    description: "A gel-to-milk cleanser that never strips.",
+    name: "Nettoyant Nuage",
+    price: "3500 DA",
+    description: "Un nettoyant gel-lait qui n'agresse jamais.",
     imageFront: "/products/cleanser-front.jpg",
     imageBack: "/products/cleanser-texture.jpg",
   },
   {
     id: "daily-barrier-cream",
-    name: "Daily Barrier Cream",
-    price: "$46",
-    description: "Lightweight hydration that lasts all day.",
+    name: "Crème Barrière Quotidienne",
+    price: "1500 DA",
+    description: "Une hydratation légère qui dure toute la journée.",
     imageFront: "/products/cream-front.jpg",
     imageBack: "/products/cream-texture.jpg",
   },
   {
     id: "overnight-renewal-oil",
-    name: "Overnight Renewal Oil",
-    price: "$64",
-    description: "A nourishing blend that repairs while you sleep.",
+    name: "Huile de Renouveau Nocturne",
+    price: "2500 DA",
+    description: "Un mélange nourrissant qui répare pendant votre sommeil.",
     imageFront: "/products/oil-front.jpg",
     imageBack: "/products/oil-texture.jpg",
   },
@@ -63,13 +64,13 @@ function ProductCard({ product }: { product: (typeof PRODUCTS)[number] }) {
       <div
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
-        className="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-powder/20"
+        className="relative aspect-4/5 w-full overflow-hidden rounded-lg bg-powder/20"
       >
         <div ref={frontRef} className="absolute inset-0">
           <Image src={product.imageFront} alt={product.name} fill className="object-cover" />
         </div>
         <div ref={backRef} className="absolute inset-0 opacity-0">
-          <Image src={product.imageBack} alt={`${product.name}, texture detail`} fill className="object-cover" />
+          <Image src={product.imageBack} alt={`${product.name}, détail de texture`} fill className="object-cover" />
         </div>
       </div>
 
@@ -81,8 +82,8 @@ function ProductCard({ product }: { product: (typeof PRODUCTS)[number] }) {
         <span className="whitespace-nowrap text-sm font-medium text-navy">{product.price}</span>
       </div>
 
-      <button className="mt-4 self-start border-b border-navy pb-0.5 text-xs uppercase tracking-widest text-navy transition-colors hover:border-blue hover:text-blue">
-        Add to Cart
+      <button className="mt-4 self-start border-b border-navy pb-0.5 text-xs uppercase tracking-widest text-navy transition-colors hover:border-blue hover:text-blue cursor-pointer">
+        Ajouter au panier
       </button>
     </div>
   );
@@ -115,17 +116,27 @@ export default function ProductGrid() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="mx-auto max-w-7xl px-4 py-24 sm:px-8">
+    <section id="shop" ref={sectionRef} className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-20">
       <div className="mb-12 text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-blue">Bestsellers</p>
-        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">Our Icons</h2>
-        <p className="mt-3 text-sm text-ink/60">The four formulas we&rsquo;re known for.</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-blue">Meilleures ventes</p>
+        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">Nos Icônes</h2>
+        <p className="mt-3 text-sm text-ink/60">Les quatre formules qui nous ont rendus célèbres.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
         {PRODUCTS.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
+      </div>
+
+      {/* Shop Now Button - Centered */}
+      <div className="mt-12 text-center">
+        <Link
+  href="/shop"
+  className="inline-block text-sm font-medium uppercase tracking-widest text-navy/60 transition-colors hover:text-navy hover:underline underline-offset-4"
+>
+  Voir tous les produits →
+</Link>
       </div>
     </section>
   );
