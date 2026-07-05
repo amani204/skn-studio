@@ -1,30 +1,39 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display_SC, Inter } from "next/font/google";
+import Navbar from "@/components/storefront/Navbar";
+import Footer from "@/components/storefront/Footer";
 import "./globals.css";
 
-const displayFont = Playfair_Display({
+// Playfair Display SC only ships weight 400 — that's expected, it's a
+// display/small-caps cut, not a full text family.
+const playfair = Playfair_Display_SC({
   subsets: ["latin"],
-  variable: "--font-display",
+  weight: "400",
+  variable: "--font-playfair",
 });
 
-const bodyFont = Inter({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-body",
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "Your Store Name",
-    template: "%s | Your Store Name",
-  },
-  description: "Clean, effective skincare.",
+  title: "SKN Studio",
+  description: "Skincare, considered.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
-      <body className={`${displayFont.variable} ${bodyFont.variable} font-body`}>
+    <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
+      <body>
+        <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );

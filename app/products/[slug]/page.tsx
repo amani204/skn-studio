@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getProductBySlug, getRelatedProducts } from "@/lib/products";
-import { ProductGrid } from "@/components/storefront/ProductGrid";
+import { ProductGrid } from "@/components/storefront/home/ProductGrid";
 import type { Metadata } from "next";
 
 type PageProps = {

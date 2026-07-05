@@ -1,20 +1,76 @@
 @import "tailwindcss";
 
-:root {
-  /* Brand tokens — swap these per client, nothing else needs to change */
-  --brand-bg: 250 249 246;        /* warm off-white */
-  --brand-surface: 255 255 255;   /* card backgrounds */
-  --brand-primary: 122 138 113;   /* sage green */
-  --brand-primary-dark: 92 106 84;
-  --brand-accent: 214 178 155;    /* soft clay/blush */
-  --brand-text: 38 38 36;         /* near-black, warm */
-  --brand-text-muted: 115 113 108;
-  --brand-border: 231 228 221;
+/* ------------------------------------------------------------------ */
+/* Design tokens — Tailwind v4 reads @theme and auto-generates         */
+/* utilities: bg-cream, text-navy, border-powder, font-display, etc.   */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Palette */
+  --color-cream: #F6F4F0;   /* base background */
+  --color-navy: #3D5C9A;    /* primary / logo / active */
+  --color-blue: #657DAE;    /* accent / links hover */
+  --color-powder: #A7B4D2;  /* borders, subtle fills */
+  --color-ink: #181818;     /* body text */
+
+  /* Typography — CSS vars below are populated by next/font in layout.tsx */
+  --font-display: var(--font-playfair), "Playfair Display SC", serif;
+  --font-body: var(--font-inter), "Inter", sans-serif;
+
+  /* Layout helpers */
+  --container-page: 80%;
 }
 
-@layer base {
-  body {
-    background-color: rgb(var(--brand-bg));
-    color: rgb(var(--brand-text));
+/* ------------------------------------------------------------------ */
+/* Base                                                                 */
+/* ------------------------------------------------------------------ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-navy);
+  color: var(--color-cream);
+}
+
+/* Scrollbar (webkit) — kept thin & quiet, matches the restrained palette */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-powder);
+  border-radius: 999px;
+  border: 2px solid var(--color-cream);
+}
+
+/* Visible keyboard focus everywhere — accessibility floor */
+:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 3px;
+}
+
+/* Respect reduced motion preference site-wide */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
