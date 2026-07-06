@@ -1,7 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext";
 
 type ProductCardProps = {
+  id: string;
   slug: string;
   name: string;
   price: number;
@@ -9,7 +13,9 @@ type ProductCardProps = {
   imageUrl?: string;
 };
 
-export function ProductCard({ slug, name, price, oldPrice, imageUrl }: ProductCardProps) {
+export function ProductCard({ id, slug, name, price, oldPrice, imageUrl }: ProductCardProps) {
+  const { addItem } = useCart();
+
   return (
     <Link
       href={`/products/${slug}`}
@@ -26,7 +32,7 @@ export function ProductCard({ slug, name, price, oldPrice, imageUrl }: ProductCa
           />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-ink/40">
-            Pas d'image
+            Pas d&apos;image
           </div>
         )}
         {oldPrice && (
@@ -41,25 +47,21 @@ export function ProductCard({ slug, name, price, oldPrice, imageUrl }: ProductCa
           <div>
             <h3 className="font-display text-base text-ink">{name}</h3>
             <div className="mt-1 flex items-center gap-2">
-              <span className="text-sm font-medium text-navy">
-                {price.toFixed(2)} DA
-              </span>
+              <span className="text-sm font-medium text-navy">{price.toLocaleString()} DA</span>
               {oldPrice && (
                 <span className="text-xs text-ink/40 line-through">
-                  {oldPrice.toFixed(2)} DA
+                  {oldPrice.toLocaleString()} DA
                 </span>
               )}
             </div>
           </div>
 
-          {/* Minimal Add Button */}
           <button
             onClick={(e) => {
-              e.preventDefault();
-              // Handle add to cart here
-              console.log("Added to cart:", slug);
+              e.preventDefault(); // don't navigate to the product page on add-to-cart click
+              addItem({ id, name, price, image: imageUrl ?? "" });
             }}
-            className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-full border border-navy/15 text-navy/40 transition-all hover:border-navy/40 hover:bg-navy hover:text-white hover:shadow-sm flex-shrink-0"
+            className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-navy/15 text-navy/40 transition-all hover:border-navy/40 hover:bg-navy hover:text-white hover:shadow-sm"
             aria-label="Ajouter au panier"
           >
             <span className="text-base leading-none">+</span>

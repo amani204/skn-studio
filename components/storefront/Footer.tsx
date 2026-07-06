@@ -51,7 +51,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="mt-6 text-[10px] text-ink/25">
-          © {new Date().getFullYear()} SKN Studio by Aamni        </div>
+          © {new Date().getFullYear()} SKN Studio by Amani        </div>
       </div>
     </footer>
   );

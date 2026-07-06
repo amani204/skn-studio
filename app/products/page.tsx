@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { getProducts, getCategories, parseProductFilters } from "@/lib/products";
-import { ProductGrid } from "@/components/storefront/home/ProductGrid";
 import { SearchBar } from "@/components/storefront/SearchBar";
 import { Filters } from "@/components/storefront/Filters";
 
@@ -29,7 +28,7 @@ async function ProductsContent({ searchParams }: PageProps) {
         <Filters categories={categories} />
       </div>
 
-      <ProductGrid products={products} />
+     
     </>
   );
 }

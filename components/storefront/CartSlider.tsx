@@ -156,7 +156,7 @@ export default function CartSlider() {
             <Link
               href="/checkout"
               onClick={closeCart}
-              className="mt-4 block w-full rounded-md border border-navy/15 py-2.5 text-center text-xs font-medium uppercase tracking-widest text-navy transition-all hover:bg-navy hover:text-white hover:border-navy"
+              className="mt-4 block w-full text-center border rounded-lg bg-navy px-6 py-3 text-sm font-medium text-white transition-all hover:bg-navy/80 hover:shadow-md"
             >
               Passer la commande
             </Link>

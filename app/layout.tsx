@@ -29,14 +29,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
+    <html lang="fr" className={`${playfair.variable} ${inter.variable}`}>
       <body>
         <CartProvider>
           <Navbar />
           <CartSlider />
           {children}
+          <Footer />
         </CartProvider>
-        <Footer/>
       </body>
     </html>
   );

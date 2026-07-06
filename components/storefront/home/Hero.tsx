@@ -76,7 +76,7 @@ export default function Hero() {
         className="relative h-[85vh] w-full overflow-hidden sm:h-[90vh]"
       >
         <Image
-          src="/hero-skincare.jpg"
+          src="/Hero.png"
           alt="SKN Studio soins de la peau"
           fill
           priority

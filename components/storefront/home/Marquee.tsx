@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 const MARQUEE_ITEMS = [
-  "Livraison gratuite dès 5000 DA",
+  "Livraison gratuite dès 20000 DA",
   "Testé dermatologiquement",
   "Sans cruauté",
   "Réparation de la barrière cutanée en 14 jours",
