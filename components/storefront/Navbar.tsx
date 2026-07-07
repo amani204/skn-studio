@@ -7,9 +7,9 @@ import { Search, ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
 const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Shop", href: "/shop" },
-  { label: "About Us", href: "/#about" },
+  { label: "Accueil", href: "/" },
+  { label: "Boutique", href: "/products" },
+  { label: "À propos", href: "/#about" },
   { label: "Contact", href: "/#contact" },
 ];
 
@@ -126,6 +126,18 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
+  // ==================== SMOOTH SCROLL ====================
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("/#")) {
+      e.preventDefault();
+      const targetId = href.replace("/#", "");
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
+
   return (
     <>
       <header className="fixed left-0 right-0 top-4 z-50 flex justify-center px-3 sm:top-6 sm:px-4">
@@ -145,6 +157,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={(e) => handleSmoothScroll(e, link.href)}
                 onMouseEnter={() => handleEnter(i)}
                 onMouseLeave={() => handleLeave(i)}
                 className="relative text-sm font-medium tracking-wide text-ink/80 transition-colors hover:text-navy"
@@ -161,13 +174,13 @@ export default function Navbar() {
           </div>
 
           <div ref={iconsRef} className="flex items-center justify-end gap-3 sm:gap-5">
-            <button aria-label="Search" className="text-ink/80 transition-colors hover:text-navy">
+            <button aria-label="Rechercher" className="text-ink/80 transition-colors hover:text-navy">
               <Search size={16} strokeWidth={1.6} />
             </button>
 
             <button
               onClick={toggleCart}
-              aria-label="Cart"
+              aria-label="Panier"
               className="relative text-ink/80 transition-colors hover:text-navy"
             >
               <ShoppingBag size={16} strokeWidth={1.6} />
@@ -181,7 +194,7 @@ export default function Navbar() {
             <button
               onClick={toggleMobileMenu}
               className="text-ink/80 transition-colors hover:text-navy md:hidden"
-              aria-label="Toggle menu"
+              aria-label="Menu"
             >
               {isMobileMenuOpen ? <X size={20} strokeWidth={1.6} /> : <Menu size={20} strokeWidth={1.6} />}
             </button>
@@ -202,7 +215,7 @@ export default function Navbar() {
         <button
           onClick={closeMobileMenu}
           className="absolute right-6 top-6 flex items-center justify-center text-ink/80 backdrop-blur-sm transition-all hover:text-navy"
-          aria-label="Close menu"
+          aria-label="Fermer le menu"
         >
           <X size={18} strokeWidth={1.6} />
         </button>
@@ -221,7 +234,10 @@ export default function Navbar() {
                 mobileLinksRef.current[i] = el;
               }}
               href={link.href}
-              onClick={closeMobileMenu}
+              onClick={(e) => {
+                handleSmoothScroll(e, link.href);
+                closeMobileMenu();
+              }}
               className="group relative px-4 py-3 text-sm font-light tracking-wide text-ink/70 transition-all hover:pl-6 hover:text-navy"
             >
               <span className="relative z-10 flex items-center gap-3">
@@ -237,7 +253,7 @@ export default function Navbar() {
 
         <div className="absolute bottom-6 left-8 right-8 flex flex-col items-center gap-1 border-t border-ink/10 pt-4 text-xs text-ink/30">
           <span>© 2026 SKN Studio</span>
-          <span className="text-[10px] tracking-widest">By Amani</span>
+          <span className="text-[10px] tracking-widest">Par Amani</span>
         </div>
       </div>
     </>

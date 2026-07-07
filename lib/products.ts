@@ -1,100 +1,79 @@
+// lib/products.ts
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 
-export type ProductFilters = {
-  search?: string;
-  category?: string; // category slug
-  minPrice?: number;
-  maxPrice?: number;
-  sort?: "newest" | "oldest" | "price-asc" | "price-desc";
+export type ShopProduct = {
+  id: string;
+  slug: string;
+  name: string;
+  price: number;        // ← number, not Decimal
+  oldPrice: number | null;  // ← number, not Decimal
+  description: string;
+  categorySlug: string;
+  images: string[];
+  stock: number;
 };
 
-export function parseProductFilters(searchParams: URLSearchParams): ProductFilters {
-  const minPriceRaw = searchParams.get("minPrice");
-  const maxPriceRaw = searchParams.get("maxPrice");
+export type ShopCategory = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+export async function getShopData() {
+  const [products, categories] = await Promise.all([
+    prisma.product.findMany({
+      where: { isPublished: true },
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        price: true,
+        oldPrice: true,
+        description: true,
+        category: { select: { slug: true } },
+        images: { select: { url: true }, orderBy: { order: "asc" } },
+        stock: true,
+      },
+    }),
+    prisma.category.findMany({
+      select: { id: true, name: true, slug: true },
+    }),
+  ]);
 
   return {
-    search: searchParams.get("search") || undefined,
-    category: searchParams.get("category") || undefined,
-    minPrice: minPriceRaw ? Number(minPriceRaw) : undefined,
-    maxPrice: maxPriceRaw ? Number(maxPriceRaw) : undefined,
-    sort: (searchParams.get("sort") as ProductFilters["sort"]) || "newest",
+    products: products.map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      name: p.name,
+      price: Number(p.price),  // ← Convert Decimal to number
+      oldPrice: p.oldPrice ? Number(p.oldPrice) : null,  // ← Convert Decimal to number
+      description: p.description,
+      categorySlug: p.category.slug,
+      images: p.images.map((img) => img.url),
+      stock: p.stock,
+    })),
+    categories,
   };
 }
 
-export async function getProducts(filters: ProductFilters) {
-  const where: Prisma.ProductWhereInput = {
-    isPublished: true,
-  };
-
-  if (filters.search) {
-    where.OR = [
-      { name: { contains: filters.search, mode: "insensitive" } },
-      { description: { contains: filters.search, mode: "insensitive" } },
-    ];
-  }
-
-  if (filters.category) {
-    where.category = { slug: filters.category };
-  }
-
-  if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
-    where.price = {};
-    if (filters.minPrice !== undefined) where.price.gte = filters.minPrice;
-    if (filters.maxPrice !== undefined) where.price.lte = filters.maxPrice;
-  }
-
-  const orderBy: Prisma.ProductOrderByWithRelationInput =
-    filters.sort === "oldest"
-      ? { createdAt: "asc" }
-      : filters.sort === "price-asc"
-      ? { price: "asc" }
-      : filters.sort === "price-desc"
-      ? { price: "desc" }
-      : { createdAt: "desc" }; // newest = default
-
-  const products = await prisma.product.findMany({
-    where,
-    orderBy,
+export async function getProductDetail(slug: string) {
+  const product = await prisma.product.findUnique({
+    where: { slug },
     include: {
-      images: { orderBy: { order: "asc" }, take: 1 },
       category: true,
-    },
-  });
-
-  return products;
-}
-
-export async function getProductBySlug(slug: string) {
-  return prisma.product.findUnique({
-    where: { slug, isPublished: true },
-    include: {
       images: { orderBy: { order: "asc" } },
-      category: true,
       reviews: {
         where: { isApproved: true },
-        orderBy: { createdAt: "desc" },
+        select: { id: true, rating: true, comment: true, reviewerName: true, createdAt: true },
       },
     },
   });
-}
 
-export async function getRelatedProducts(categoryId: string, excludeProductId: string) {
-  return prisma.product.findMany({
-    where: {
-      categoryId,
-      isPublished: true,
-      id: { not: excludeProductId },
-    },
-    include: {
-      images: { orderBy: { order: "asc" }, take: 1 },
-    },
-    take: 4,
-  });
-}
+  if (!product) return null;
 
-export async function getCategories() {
-  return prisma.category.findMany({
-    orderBy: { name: "asc" },
-  });
+  return {
+    ...product,
+    price: Number(product.price),  // ← Convert Decimal to number
+    oldPrice: product.oldPrice ? Number(product.oldPrice) : null,  // ← Convert Decimal to number
+  };
 }
