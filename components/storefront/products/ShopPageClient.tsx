@@ -96,11 +96,11 @@ export default function ShopPageClient({ products, categories }: ShopPageClientP
   return (
     <main className="mx-auto max-w-7xl px-4 pb-24 pt-32 sm:px-8 sm:pt-40">
       {/* Header */}
-      <div ref={headerRef} className="mb-10 text-center">
+      <div ref={headerRef} className="mb-8 text-center sm:mb-10">
         <span className="inline-block text-xs uppercase tracking-[0.3em] text-blue">
           Boutique
         </span>
-        <h1 className="mt-3 font-display text-3xl text-ink sm:text-4xl">
+        <h1 className="mt-3 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
           Toutes nos formules
         </h1>
         <p className="mt-2 text-sm text-ink/50">
@@ -122,8 +122,8 @@ export default function ShopPageClient({ products, categories }: ShopPageClientP
         onReset={handleReset}
       />
 
-      {/* Products Grid */}
-      <div ref={gridRef} className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Products Grid - 2 columns on mobile */}
+      <div ref={gridRef} className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4">
         {pageProducts.length === 0 ? (
           <div className="col-span-full py-20 text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-powder/20">

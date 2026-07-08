@@ -50,7 +50,7 @@ export default function Loading() {
 </div>
 
       {/* Grid Skeleton */}
-      <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <div key={i} className="flex flex-col">
             <div className="aspect-square w-full animate-pulse rounded-lg bg-powder/10" />

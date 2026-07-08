@@ -78,12 +78,14 @@ function ProductCard({ product }: { product: (typeof PRODUCTS)[number] }) {
         </div>
       </div>
 
-      <div className="mt-4 flex items-start justify-between gap-3">
+      <div className="mt-3 flex items-start justify-between gap-2 sm:mt-4 sm:gap-3">
         <div>
-          <h3 className="font-display text-base text-ink">{product.name}</h3>
-          <p className="mt-1 text-sm text-ink/60">{product.description}</p>
+          <h3 className="font-display text-sm text-ink sm:text-base">{product.name}</h3>
+          <p className="mt-0.5 text-xs text-ink/60 sm:mt-1 sm:text-sm">
+            {product.description}
+          </p>
         </div>
-        <span className="whitespace-nowrap text-sm font-medium text-navy">
+        <span className="whitespace-nowrap text-xs font-medium text-navy sm:text-sm">
           {product.price.toLocaleString()} DA
         </span>
       </div>
@@ -97,7 +99,7 @@ function ProductCard({ product }: { product: (typeof PRODUCTS)[number] }) {
             image: product.imageFront,
           })
         }
-        className="mt-4 self-start border-b border-navy pb-0.5 text-xs uppercase tracking-widest text-navy transition-colors hover:border-blue hover:text-blue"
+        className="mt-2 self-start border-b border-navy pb-0.5 text-[10px] uppercase tracking-widest text-navy transition-colors hover:border-blue hover:text-blue sm:mt-3 sm:text-xs"
       >
         Ajouter au panier
       </button>
@@ -132,26 +134,30 @@ export default function ProductGrid() {
   }, []);
 
   return (
-    <section id="shop" ref={sectionRef} className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-20">
+    <section id="shop" ref={sectionRef} className="mx-auto max-w-7xl px-4 py-12 sm:px-8 sm:py-20">
       {/* Header */}
-      <div className="mb-12 text-center">
+      <div className="mb-8 text-center sm:mb-12">
         <p className="text-xs uppercase tracking-[0.3em] text-blue">Meilleures ventes</p>
-        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">Nos Icônes</h2>
-        <p className="mt-3 text-sm text-ink/60">Les quatre formules qui nous ont rendus célèbres.</p>
+        <h2 className="mt-2 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
+          Nos Icônes
+        </h2>
+        <p className="mt-2 text-sm text-ink/60 sm:mt-3">
+          Les quatre formules qui nous ont rendus célèbres.
+        </p>
       </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Products Grid - 2 columns on mobile */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-8 sm:gap-y-12 lg:grid-cols-4">
         {PRODUCTS.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
 
       {/* Voir tout - Underline Link */}
-      <div className="mt-12 text-center">
+      <div className="mt-10 text-center sm:mt-12">
         <Link
           href="/shop"
-          className="group inline-flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-navy/60 transition-colors hover:text-navy"
+          className="group relative inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-navy/60 transition-colors hover:text-navy sm:text-sm"
         >
           <span>Voir toute la boutique</span>
           <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>

@@ -130,7 +130,7 @@ export default function Hero() {
               Trois ingrédients actifs. Une peau plus calme en 14 jours.
             </p>
             <Link
-              href="/shop"
+              href="/products"
               className="mt-3 inline-block text-xs font-medium text-white/80 transition-colors hover:text-white"
             >
               Acheter →

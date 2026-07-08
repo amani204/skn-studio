@@ -5,7 +5,8 @@ import { getProductDetail } from "@/lib/products";
 import AddToCartButton from "@/components/storefront/productDetails/AddToCartButton";
 import ProductsCard from "@/components/storefront/products/ProductsCard";
 import ReviewsSection from "@/components/storefront/productDetails/ReviewsSection";
-import { Star, Package, Truck, Shield, Heart } from "lucide-react";
+import { Package, Truck, Shield } from "lucide-react";
+
 type PageProps = {
   params: { slug: string };
 };
@@ -47,7 +48,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   return (
     <main className="mx-auto max-w-6xl px-4 pb-24 pt-32 sm:px-8 sm:pt-40">
       {/* Product Section */}
-      <div className="grid gap-12 md:grid-cols-2">
+      <div className="grid gap-8 md:grid-cols-2 md:gap-12">
         {/* Image Gallery */}
         <div className="space-y-4">
           <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-powder/20">
@@ -81,17 +82,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </p>
 
           {/* Name */}
-          <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+          <h1 className="mt-2 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
             {product.name}
           </h1>
 
           {/* Price */}
           <div className="mt-4 flex items-baseline gap-3">
-            <span className="text-3xl font-medium text-navy">
+            <span className="text-2xl font-medium text-navy sm:text-3xl">
               {product.price.toLocaleString()} DA
             </span>
             {product.oldPrice && (
-              <span className="text-lg text-ink/40 line-through">
+              <span className="text-base text-ink/40 line-through sm:text-lg">
                 {product.oldPrice.toLocaleString()} DA
               </span>
             )}
@@ -134,42 +135,42 @@ export default async function ProductDetailPage({ params }: PageProps) {
       </div>
 
       {/* Reviews Section */}
-      <section className="mt-20 border-t border-powder/30 pt-16 text-center">
+      <section className="mt-20 ">
       <ReviewsSection productId={product.id} />
-      </section>
+       </section>
+      {/* You May Also Like */}
+      <section className="mt-20 border-t border-powder/30 pt-16">
+        <div className="mb-10 text-center">
+          <span className="inline-block text-xs uppercase tracking-[0.3em] text-blue">
+            Finalisez votre routine
+          </span>
+          <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
+            Vous aimerez aussi
+          </h2>
+        </div>
 
-{/* You May Also Like */}
-<section className="mt-20 border-t border-powder/30 pt-16">
-   <div className="mb-10 text-center">
-   <span className="inline-block text-xs uppercase tracking-[0.3em] text-blue">
-    Finalisez votre routine
-    </span>
-    <h1 className="mt-3 font-display text-3xl  text-ink sm:text-4xl">
-      Vous aimerez aussi
-    </h1>
-    </div>
-  {related.length === 0 ? (
-    <div className="mt-8 rounded-xl border border-powder/30px-6 py-12 text-center">
-      <p className="text-sm text-ink/40">
-        Aucun produit similaire disponible pour le moment.
-      </p>
-    </div>
-  ) : (
-    <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-      {related.map((p) => (
-        <ProductsCard
-          key={p.id}
-          id={p.id}
-          slug={p.slug}
-          name={p.name}
-          price={p.price}
-          oldPrice={p.oldPrice}
-          imageUrl={p.images[0]}
-        />
-      ))}
-    </div>
-  )}
-</section>
+        {related.length === 0 ? (
+          <div className="mt-8 rounded-xl border border-powder/30 px-6 py-12 text-center">
+            <p className="text-sm text-ink/40">
+              Aucun produit similaire disponible pour le moment.
+            </p>
+          </div>
+        ) : (
+          <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4">
+            {related.map((p) => (
+              <ProductsCard
+                key={p.id}
+                id={p.id}
+                slug={p.slug}
+                name={p.name}
+                price={p.price}
+                oldPrice={p.oldPrice}
+                imageUrl={p.images[0]}
+              />
+            ))}
+          </div>
+        )}
+      </section>
     </main>
   );
 }
