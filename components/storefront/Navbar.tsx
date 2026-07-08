@@ -2,32 +2,35 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 import { Search, ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
 const NAV_LINKS = [
-  { label: "Accueil", href: "/" },
-  { label: "Boutique", href: "/products" },
-  { label: "À propos", href: "/#about" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Accueil", href: "/", isHash: false },
+  { label: "Boutique", href: "/products", isHash: false },
+  { label: "À propos", href: "/#about", isHash: false },
+  { label: "Contact", href: "/#contact", isHash: false },
 ];
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { itemCount, toggleCart } = useCart();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const navRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
   const iconsRef = useRef<HTMLDivElement>(null);
-  const underlineRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const mobileLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const menuLogoRef = useRef<HTMLDivElement>(null);
 
+  // ==================== NAVBAR ENTRANCE ANIMATION ====================
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -51,6 +54,7 @@ export default function Navbar() {
     return () => ctx.revert();
   }, []);
 
+  // ==================== SCROLL ANIMATION ====================
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
@@ -72,22 +76,30 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleEnter = (i: number) => {
-    const el = underlineRefs.current[i];
-    if (!el) return;
-    gsap.fromTo(
-      el,
-      { scaleX: 0, transformOrigin: "left" },
-      { scaleX: 1, duration: 0.35, ease: "power2.out" }
-    );
+  // ==================== NAVIGATION HANDLER ====================
+  const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, href: string, isHash: boolean) => {
+    if (isHash) {
+      e.preventDefault();
+      
+      if (isMobileMenuOpen) {
+        closeMobileMenu();
+      }
+
+      const [path, hash] = href.split("#");
+      
+      if (path && path !== pathname && path !== "/") {
+        router.push(href);
+        return;
+      }
+
+      const targetElement = document.getElementById(hash);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
   };
 
-  const handleLeave = (i: number) => {
-    const el = underlineRefs.current[i];
-    if (!el) return;
-    gsap.to(el, { scaleX: 0, transformOrigin: "right", duration: 0.3, ease: "power2.in" });
-  };
-
+  // ==================== MOBILE MENU ====================
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -126,24 +138,13 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
-  // ==================== SMOOTH SCROLL ====================
-  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith("/#")) {
-      e.preventDefault();
-      const targetId = href.replace("/#", "");
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
-  };
-
+  // ==================== RENDER ====================
   return (
     <>
       <header className="fixed left-0 right-0 top-4 z-50 flex justify-center px-3 sm:top-6 sm:px-4">
         <nav
           ref={navRef}
-          className="grid w-[80%] max-w-6xl grid-cols-2 items-center rounded-lg border border-navy/10 px-4 py-2 backdrop-blur-md sm:px-8 sm:py-[0.9rem] md:grid-cols-3"
+          className="grid w-page max-w-6xl grid-cols-2 items-center rounded-lg border border-navy/10 px-4 py-2 backdrop-blur-md sm:px-8 sm:py-[0.9rem] md:grid-cols-3"
           style={{ backgroundColor: "rgba(246, 244, 240, 0.45)" }}
         >
           <div ref={logoRef} className="justify-self-start">
@@ -153,22 +154,15 @@ export default function Navbar() {
           </div>
 
           <div ref={linksRef} className="hidden items-center justify-center gap-10 md:flex">
-            {NAV_LINKS.map((link, i) => (
+            {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={(e) => handleSmoothScroll(e, link.href)}
-                onMouseEnter={() => handleEnter(i)}
-                onMouseLeave={() => handleLeave(i)}
-                className="relative text-sm font-medium tracking-wide text-ink/80 transition-colors hover:text-navy"
+                onClick={(e) => handleNavigation(e, link.href, link.isHash)}
+                className="group relative text-sm font-medium tracking-wide text-ink/80 transition-colors hover:text-navy"
               >
                 {link.label}
-                <span
-                  ref={(el) => {
-                    underlineRefs.current[i] = el;
-                  }}
-                  className="absolute -bottom-1 left-0 h-[1.5px] w-full origin-left scale-x-0 bg-navy"
-                />
+                <span className="absolute -bottom-1 left-0 h-[1.5px] w-0 bg-navy transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
           </div>
@@ -210,7 +204,7 @@ export default function Navbar() {
 
       <div
         ref={menuRef}
-        className="fixed top-0 right-0 z-50 h-full w-75 translate-x-full bg-[#F6F4F0] px-8 py-12 opacity-0 shadow-2xl sm:w-90"
+        className="fixed top-0 right-0 z-50 h-full w-75 translate-x-full bg-cream px-8 py-12 opacity-0 shadow-2xl sm:w-90"
       >
         <button
           onClick={closeMobileMenu}
@@ -235,7 +229,7 @@ export default function Navbar() {
               }}
               href={link.href}
               onClick={(e) => {
-                handleSmoothScroll(e, link.href);
+                handleNavigation(e, link.href, link.isHash);
                 closeMobileMenu();
               }}
               className="group relative px-4 py-3 text-sm font-light tracking-wide text-ink/70 transition-all hover:pl-6 hover:text-navy"
