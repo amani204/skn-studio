@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display_SC, Inter } from "next/font/google";
 import Navbar from "@/components/storefront/Navbar";
 import CartSlider from "@/components/storefront/CartSlider";
+import WhatsAppButton from "@/components/storefront/WhatsappButton";
 import { CartProvider } from "@/context/CartContext";
 import Footer from "@/components/storefront/Footer";
 import "./globals.css";
@@ -34,6 +35,7 @@ export default function RootLayout({
         <CartProvider>
           <Navbar />
           <CartSlider />
+          <WhatsAppButton />
           {children}
           <Footer />
         </CartProvider>

@@ -58,9 +58,9 @@ export default function ShippingInfo() {
     <section ref={sectionRef} className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-20">
       {/* Header - Matching Product Grid */}
       <div className="mb-12 text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-blue">Shipping</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-blue">Livraison</p>
         <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
-          Shipping Only in Algeria
+          Livraison partout en Algérie
         </h2>
         <p className="mt-3 text-sm text-ink/60 max-w-2xl mx-auto">
           Nous livrons exclusivement à travers les 69 wilayas d'Algérie. 
