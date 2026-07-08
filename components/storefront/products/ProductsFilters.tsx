@@ -82,7 +82,7 @@ export default function ProductFilters({
             </button>
             {categories.map((category) => (
               <button
-                key={category.id}
+                key={category.slug}
                 onClick={() => onChange(category.slug)}
                 className={`relative px-3 py-1.5 text-center text-xs font-medium uppercase tracking-widest transition-all ${
                   activeCategory === category.slug
