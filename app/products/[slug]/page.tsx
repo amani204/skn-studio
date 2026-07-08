@@ -2,11 +2,10 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { getProductDetail } from "@/lib/products";
-import AddToCartButton from "@/components/storefront/products/AddToCartButton";
-import ReviewForm from "@/components/storefront/products/ReviewForm";
+import AddToCartButton from "@/components/storefront/productDetails/AddToCartButton";
 import ProductsCard from "@/components/storefront/products/ProductsCard";
+import ReviewsSection from "@/components/storefront/productDetails/ReviewsSection";
 import { Star, Package, Truck, Shield, Heart } from "lucide-react";
-
 type PageProps = {
   params: { slug: string };
 };
@@ -136,70 +135,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
       {/* Reviews Section */}
       <section className="mt-20 border-t border-powder/30 pt-16 text-center">
-        <span className="inline-block text-xs uppercase tracking-[0.3em] text-blue">
-          Avis
-        </span>
-        <h1 className="mt-3 font-display text-3xl text-ink sm:text-4xl">
-          Votre Avis
-        </h1>
-        
-        <div className="mt-8 space-y-4">
-          {reviews.length === 0 ? (
-            <div className="rounded-xl border border-powder/30 px-6 py-12 text-center">
-              <p className="text-sm text-ink/40">
-                Aucun avis pour l'instant. Soyez le premier à donner votre avis.
-              </p>
-            </div>
-          ) : (
-            reviews.map((review) => (
-              <div
-                key={review.id}
-                className="rounded-xl border border-powder/30 p-6 transition-all hover:border-navy/10"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <span className="text-sm font-medium text-ink">
-                      {review.reviewerName ?? "Anonyme"}
-                    </span>
-                    <div className="mt-1 flex items-center gap-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <span
-                          key={i}
-                          className={`text-sm ${
-                            i < review.rating ? "text-blue" : "text-powder/30"
-                          }`}
-                        >
-                          ★
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <span className="text-xs text-ink/30">
-                    {new Date(review.createdAt).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </span>
-                </div>
-                {review.comment && (
-                  <p className="mt-3 text-sm leading-relaxed text-ink/60">
-                    {review.comment}
-                  </p>
-                )}
-              </div>
-            ))
-          )}
-        </div>
-
-        <div className="mt-12 rounded-xl border border-powder/30 p-6">
-          <h3 className="text-xs uppercase tracking-widest text-ink/60">
-            Laisser un avis
-          </h3>
-          <div className="mt-4">
-            <ReviewForm productId={product.id} />
-          </div>
-        </div>
+      <ReviewsSection productId={product.id} />
       </section>
 
 {/* You May Also Like */}

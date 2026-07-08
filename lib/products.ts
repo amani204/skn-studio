@@ -95,7 +95,6 @@ export async function getShopData() {
   ]);
 
   const categories: ShopCategory[] = [
-    { slug: "all", name: "All" },
     ...categoriesRaw.map((c) => ({ slug: c.slug, name: c.name })),
   ];
 
