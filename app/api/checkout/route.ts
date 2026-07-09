@@ -80,54 +80,65 @@ export async function POST(req: NextRequest) {
   const total = subtotal + shippingCost;
 
   try {
-    const order = await prisma.$transaction(async (tx) => {
-      // Atomic stock decrement — re-checks stock inside the transaction itself,
-      // guarding against a race where two checkouts hit the last unit at once.
-      for (const item of items) {
-        const result = await tx.product.updateMany({
-          where: { id: item.productId, stock: { gte: item.quantity } },
-          data: { stock: { decrement: item.quantity } },
-        });
+    const order = await prisma.$transaction(
+      async (tx) => {
+        // Run all stock decrements in parallel instead of one-at-a-time —
+        // each is an independent operation, so there's no need to wait for
+        // one to finish before starting the next. This is what actually
+        // fixes the timeout: fewer sequential network round-trips.
+        const stockResults = await Promise.all(
+          items.map((item) =>
+            tx.product.updateMany({
+              where: { id: item.productId, stock: { gte: item.quantity } },
+              data: { stock: { decrement: item.quantity } },
+            })
+          )
+        );
 
-        if (result.count === 0) {
-          const product = productMap.get(item.productId);
-          throw new Error(`OUT_OF_STOCK:${product?.name ?? item.productId}`);
+        const failedIndex = stockResults.findIndex((r) => r.count === 0);
+        if (failedIndex !== -1) {
+          const product = productMap.get(items[failedIndex].productId);
+          throw new Error(`OUT_OF_STOCK:${product?.name ?? items[failedIndex].productId}`);
         }
-      }
 
-      return tx.order.create({
-        data: {
-          status: "PENDING",
-          subtotal,
-          shippingCost,
-          total,
-          deliveryMethod,
-          notes: notes || null,
-          items: {
-            create: items.map((item) => {
-              const product = productMap.get(item.productId)!;
-              return {
-                productId: item.productId,
-                quantity: item.quantity,
-                price: product.price,
-                productName: product.name,
-              };
-            }),
-          },
-          shippingAddress: {
-            create: {
-              fullName,
-              phone,
-              wilaya: rate.wilaya,
-              wilayaCode: rate.wilayaCode,
-              commune,
-              address: address || null,
+        return tx.order.create({
+          data: {
+            status: "PENDING",
+            subtotal,
+            shippingCost,
+            total,
+            deliveryMethod,
+            notes: notes || null,
+            items: {
+              create: items.map((item) => {
+                const product = productMap.get(item.productId)!;
+                return {
+                  productId: item.productId,
+                  quantity: item.quantity,
+                  price: product.price,
+                  productName: product.name,
+                };
+              }),
+            },
+            shippingAddress: {
+              create: {
+                fullName,
+                phone,
+                wilaya: rate.wilaya,
+                wilayaCode: rate.wilayaCode,
+                commune,
+                address: address || null,
+              },
             },
           },
-        },
-        include: { items: true, shippingAddress: true },
-      });
-    });
+          include: { items: true, shippingAddress: true },
+        });
+      },
+      {
+        timeout: 15000, // 15s instead of the 5s default — safety net on top of the parallelization above
+        maxWait: 5000,
+      }
+    );
 
     return NextResponse.json({
       success: true,

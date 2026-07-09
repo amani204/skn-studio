@@ -8,11 +8,12 @@ import ReviewsSection from "@/components/storefront/productDetails/ReviewsSectio
 import { Package, Truck, Shield } from "lucide-react";
 
 type PageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const data = await getProductDetail(params.slug);
+  const { slug } = await params;
+  const data = await getProductDetail(slug);
 
   if (!data) {
     return { title: "Product not found" };
@@ -30,7 +31,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const data = await getProductDetail(params.slug);
+  const { slug } = await params;
+  const data = await getProductDetail(slug);
 
   if (!data) {
     notFound();
@@ -78,13 +80,24 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div className="flex flex-col">
           {/* Category */}
           <p className="text-xs uppercase tracking-[0.3em] text-blue">
-            {product.category.name || "Produit"}
+            {product.category?.name || "Produit"}
           </p>
 
           {/* Name */}
           <h1 className="mt-2 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
             {product.name}
           </h1>
+
+          {/* Rating */}
+          {averageRating !== null && (
+            <div className="mt-2 flex items-center gap-2 text-sm text-ink/60">
+              <span className="text-blue">★</span>
+              <span>{averageRating.toFixed(1)}</span>
+              <span>
+                ({reviews.length} avis{reviews.length !== 1 ? "s" : ""})
+              </span>
+            </div>
+          )}
 
           {/* Price */}
           <div className="mt-4 flex items-baseline gap-3">
@@ -96,13 +109,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 {product.oldPrice.toLocaleString()} DA
               </span>
             )}
-          </div>
-
-          {/* Stock */}
-          <div className="mt-4 flex items-center gap-2">
-            <p className="text-xs uppercase tracking-widest text-ink/50">
-              {product.stock > 0 ? `en stock` : "Rupture de stock"}
-            </p>
           </div>
 
           {/* Description */}
@@ -135,9 +141,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
       </div>
 
       {/* Reviews Section */}
-      <section className="mt-20 ">
       <ReviewsSection productId={product.id} />
-       </section>
+
       {/* You May Also Like */}
       <section className="mt-20 border-t border-powder/30 pt-16">
         <div className="mb-10 text-center">
@@ -166,7 +171,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 price={p.price}
                 oldPrice={p.oldPrice}
                 imageUrl={p.images[0]}
-                 stock={p.stock} 
+                stock={p.stock}
               />
             ))}
           </div>
