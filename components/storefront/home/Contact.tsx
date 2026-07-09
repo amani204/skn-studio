@@ -14,6 +14,8 @@ export default function Contact() {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -42,26 +44,52 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus("idle");
+    setErrorMessage("");
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setSubmitStatus("success");
-    setIsSubmitting(false);
-
-    // Reset form
     const form = e.target as HTMLFormElement;
-    form.reset();
+    const formData = new FormData(form);
 
-    // Reset status after 5 seconds
-    setTimeout(() => setSubmitStatus("idle"), 5000);
+    const payload = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+      website, // honeypot value
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to send message");
+      }
+
+      setSubmitStatus("success");
+      form.reset();
+      setWebsite("");
+    } catch (error) {
+      setSubmitStatus("error");
+      setErrorMessage(
+        error instanceof Error ? error.message : "Une erreur s'est produite. Réessayez."
+      );
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+    }
   };
 
   const contactInfo = [
     {
       icon: Mail,
       title: "Email",
-      details: "amani@sknstudio.dz",
-      href: "mailto:uniamani2022@sknstudio.dz",
+      details: "contact@sknstudio.dz",
+      href: "mailto:contact@sknstudio.dz",
     },
     {
       icon: Phone,
@@ -85,14 +113,14 @@ export default function Contact() {
         <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">On est là pour vous</h2>
         <p className="mt-3 text-sm text-ink/60 max-w-2xl mx-auto">
           Une question sur nos produits, votre commande ou besoin de conseils ?
-          N'hésitez pas à nous contacter.
+          N&apos;hésitez pas à nous contacter.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Contact Info Cards */}
         <div className="lg:col-span-1 space-y-4">
-          {contactInfo.map((info, index) => {
+          {contactInfo.map((info) => {
             const Icon = info.icon;
             return (
               <div
@@ -104,9 +132,7 @@ export default function Contact() {
                     <Icon size={18} className="text-navy/60" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-widest text-ink/40">
-                      {info.title}
-                    </p>
+                    <p className="text-xs uppercase tracking-widest text-ink/40">{info.title}</p>
                     {info.href ? (
                       <a
                         href={info.href}
@@ -127,6 +153,18 @@ export default function Contact() {
         {/* Contact Form */}
         <div className="contact-card lg:col-span-2 rounded-lg border border-powder/40 bg-white/50 p-6 transition-all hover:border-blue/20 hover:bg-white/80 hover:shadow-sm sm:p-8">
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
+            {/* Honeypot — hidden from real users, bots fill it anyway */}
+            <input
+              type="text"
+              name="website"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              className="hidden"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
+
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
                 <label htmlFor="name" className="mb-1.5 block text-xs uppercase tracking-widest text-ink/40">
@@ -134,8 +172,10 @@ export default function Contact() {
                 </label>
                 <input
                   id="name"
+                  name="name"
                   type="text"
                   required
+                  maxLength={100}
                   placeholder="Votre nom"
                   className="w-full rounded-lg border border-powder/40 bg-white/60 px-4 py-2.5 text-sm text-ink placeholder:text-ink/30 focus:border-blue/30 focus:outline-none focus:ring-1 focus:ring-blue/20"
                 />
@@ -146,8 +186,10 @@ export default function Contact() {
                 </label>
                 <input
                   id="email"
+                  name="email"
                   type="email"
                   required
+                  maxLength={200}
                   placeholder="votre@email.dz"
                   className="w-full rounded-lg border border-powder/40 bg-white/60 px-4 py-2.5 text-sm text-ink placeholder:text-ink/30 focus:border-blue/30 focus:outline-none focus:ring-1 focus:ring-blue/20"
                 />
@@ -160,8 +202,10 @@ export default function Contact() {
               </label>
               <input
                 id="subject"
+                name="subject"
                 type="text"
                 required
+                maxLength={200}
                 placeholder="Votre sujet"
                 className="w-full rounded-lg border border-powder/40 bg-white/60 px-4 py-2.5 text-sm text-ink placeholder:text-ink/30 focus:border-blue/30 focus:outline-none focus:ring-1 focus:ring-blue/20"
               />
@@ -173,8 +217,10 @@ export default function Contact() {
               </label>
               <textarea
                 id="message"
+                name="message"
                 rows={4}
                 required
+                maxLength={5000}
                 placeholder="Votre message..."
                 className="w-full rounded-lg border border-powder/40 bg-white/60 px-4 py-2.5 text-sm text-ink placeholder:text-ink/30 focus:border-blue/30 focus:outline-none focus:ring-1 focus:ring-blue/20 resize-none"
               />
@@ -188,9 +234,7 @@ export default function Contact() {
               {isSubmitting ? (
                 "Envoi en cours..."
               ) : submitStatus === "success" ? (
-                <>
-                  <span>✓ Message envoyé</span>
-                </>
+                <span>✓ Message envoyé</span>
               ) : (
                 <>
                   <span>Envoyer</span>
@@ -202,6 +246,12 @@ export default function Contact() {
             {submitStatus === "success" && (
               <p className="text-center text-sm text-green-600 animate-in fade-in duration-300">
                 Merci ! Nous vous répondrons dans les plus brefs délais.
+              </p>
+            )}
+
+            {submitStatus === "error" && (
+              <p className="text-center text-sm text-red-600 animate-in fade-in duration-300">
+                {errorMessage}
               </p>
             )}
           </form>

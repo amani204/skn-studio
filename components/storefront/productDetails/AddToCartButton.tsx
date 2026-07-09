@@ -59,16 +59,16 @@ export default function AddToCartButton({ product }: { product: ShopProduct }) {
       )}
 
       <button
-        disabled={isSoldOut}
-        onClick={handleAddToCart}
-        className={`flex-1 rounded-full px-8 py-3 text-sm uppercase tracking-widest transition-colors ${
-          isSoldOut
-            ? "cursor-not-allowed bg-ink/10 text-ink/30"
-            : "rounded-lg bg-navy px-6 py-3 text-white transition-all hover:bg-navy/80 hover:shadow-md "
-        }`}
-      >
-        {isSoldOut ? "Rupture de stock" : "Ajouter au panier"}
-      </button>
+  disabled={isSoldOut}
+  onClick={handleAddToCart}
+  className={`flex-1 px-6 py-3 text-sm uppercase tracking-widest transition-all ${
+    isSoldOut
+      ? "cursor-not-allowed rounded-lg bg-ink/10 text-ink/30"
+      : "rounded-lg bg-navy text-white hover:bg-navy/80 hover:shadow-md"
+  }`}
+>
+  {isSoldOut ? "Rupture de stock" : "Ajouter au panier"}
+</button>
     </div>
   );
 }

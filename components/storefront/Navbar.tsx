@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 import { Search, ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import SearchBar from "./SearchBar";
 
 const NAV_LINKS = [
   { label: "Accueil", href: "/", isHash: false },
@@ -168,9 +169,7 @@ export default function Navbar() {
           </div>
 
           <div ref={iconsRef} className="flex items-center justify-end gap-3 sm:gap-5">
-            <button aria-label="Rechercher" className="text-ink/80 transition-colors hover:text-navy">
-              <Search size={16} strokeWidth={1.6} />
-            </button>
+          <SearchBar />
 
             <button
               onClick={toggleCart}

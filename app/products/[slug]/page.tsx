@@ -78,7 +78,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div className="flex flex-col">
           {/* Category */}
           <p className="text-xs uppercase tracking-[0.3em] text-blue">
-            {product.category?.name || "Produit"}
+            {product.category.name || "Produit"}
           </p>
 
           {/* Name */}
@@ -166,6 +166,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 price={p.price}
                 oldPrice={p.oldPrice}
                 imageUrl={p.images[0]}
+                 stock={p.stock} 
               />
             ))}
           </div>

@@ -147,6 +147,7 @@ export default function ShopPageClient({ products, categories }: ShopPageClientP
                 price={product.price}
                 oldPrice={product.oldPrice}
                 imageUrl={product.images[0]}
+                stock={product.stock} 
               />
             </div>
           ))

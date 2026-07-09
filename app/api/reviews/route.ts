@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // ✅ Show ONLY approved reviews (auto-approved on creation)
+    // Show ONLY approved reviews (auto-approved on creation)
     const reviews = await prisma.review.findMany({
       where: {
         productId,
@@ -33,8 +33,14 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    // Limit comment to 100 characters
+    const reviewsWithLimitedComments = reviews.map((review) => ({
+      ...review,
+      comment: review.comment ? review.comment.slice(0, 100) : null,
+    }));
+
     return NextResponse.json({
-      reviews,
+      reviews: reviewsWithLimitedComments,
       total: reviews.length,
     });
   } catch (error) {
@@ -89,14 +95,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ✅ Create review with isApproved = true (auto-approved for clients)
+    // Limit comment to 100 characters on creation
     const review = await prisma.review.create({
       data: {
         productId,
         rating,
         reviewerName: reviewerName?.trim() || undefined,
-        comment: comment?.trim() || undefined,
-        isApproved: true, // ← Auto-approved!
+        comment: comment?.trim()?.slice(0, 100) || undefined,
+        isApproved: true, 
       },
     });
 
