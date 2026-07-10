@@ -33,11 +33,10 @@ export default function RootLayout({
     <html lang="fr" className={`${playfair.variable} ${inter.variable}`}>
       <body>
         <CartProvider>
-          <Navbar />
-          <CartSlider />
-          <WhatsAppButton />
+         
+      
           {children}
-          <Footer />
+         
         </CartProvider>
       </body>
     </html>
