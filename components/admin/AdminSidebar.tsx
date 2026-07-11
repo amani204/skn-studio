@@ -17,7 +17,7 @@ export type AdminSection =
   | "products"
   | "orders"
   | "reviews"
-  | "delivery"
+  | "deliveryRates"
 
 interface AdminSidebarProps {
   active: AdminSection;
@@ -30,7 +30,7 @@ const items: { id: AdminSection; label: string; icon: typeof LayoutDashboard }[]
   { id: "products", label: "Produits", icon: Package },
   { id: "orders", label: "Commandes", icon: ShoppingBag },
   { id: "reviews", label: "Avis", icon: Star },
-  { id: "delivery", label: "Livraison", icon: Truck },
+  { id: "deliveryRates", label: "Livraison", icon: Truck },
 ];
 
 // ==================== DESKTOP SIDEBAR ====================

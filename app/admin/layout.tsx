@@ -19,7 +19,7 @@ export default function AdminLayout({
     if (pathname.startsWith("/admin/products")) return "products";
     if (pathname.startsWith("/admin/orders")) return "orders";
     if (pathname.startsWith("/admin/reviews")) return "reviews";
-    if (pathname.startsWith("/admin/delivery")) return "delivery";
+    if (pathname.startsWith("/admin/delivery")) return "deliveryRates";
 
     return "dashboard";
   };
@@ -32,7 +32,7 @@ export default function AdminLayout({
       products: "/admin/products",
       orders: "/admin/orders",
       reviews: "/admin/reviews",
-      delivery: "/admin/delivery",
+      deliveryRates: "/admin/delivery-rates",
     
     };
     router.push(routes[section]);
