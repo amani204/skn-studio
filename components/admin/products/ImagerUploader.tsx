@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { X, Upload } from "lucide-react";
 
-export type ProductImageData = { url: string; alt?: string };
+export type ProductImageData = {
+  url: string;
+  alt?: string;
+};
 
 type ImageUploaderProps = {
   images: ProductImageData[];
@@ -12,98 +15,104 @@ type ImageUploaderProps = {
 };
 
 export default function ImageUploader({ images, onChange }: ImageUploaderProps) {
-  const [uploadingSlot, setUploadingSlot] = useState<number | null>(null);
-  const [error, setError] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>, slot: number) {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setError("");
-    setUploadingSlot(slot);
-
-    const formData = new FormData();
-    formData.append("file", file);
+    setIsUploading(true);
+    setUploadError(null);
 
     try {
-      const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/admin/products/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+
+      // ✅ Check if response is OK before parsing JSON
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Erreur lors de l'upload");
+      }
+
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Échec du téléchargement");
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
-      const newImages = [...images];
-      newImages[slot] = { url: data.url };
-      onChange(newImages);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur lors du téléchargement");
+      onChange([...images, { url: data.url }]);
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : "Erreur lors de l'upload");
     } finally {
-      setUploadingSlot(null);
-      e.target.value = "";
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
-  }
+  };
 
-  function handleRemove(slot: number) {
-    const newImages = images.filter((_, i) => i !== slot);
+  const handleRemove = (index: number) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
     onChange(newImages);
-  }
-
-  const slots = [0, 1]; // slot 0 = primary image, slot 1 = optional hover image
+  };
 
   return (
-    <div>
-      <p className="mb-1.5 text-xs uppercase tracking-widest text-ink/40">
-        Images (la 2ᵉ s&apos;affiche au survol — optionnelle)
-      </p>
+    <div className="space-y-4">
+      <label className="mb-1.5 block text-xs uppercase tracking-widest text-ink/40">Images</label>
 
-      <div className="grid grid-cols-2 gap-4">
-        {slots.map((slot) => {
-          const image = images[slot];
-          const isUploading = uploadingSlot === slot;
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {images.map((img, index) => (
+          <div key={index} className="group relative aspect-square overflow-hidden rounded-lg border border-powder/40">
+            <Image
+              src={img.url}
+              alt={img.alt || `Image ${index + 1}`}
+              fill
+              className="object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => handleRemove(index)}
+              className="absolute right-1.5 top-1.5 rounded-full bg-black/50 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+            >
+              <X size={14} strokeWidth={2} />
+            </button>
+          </div>
+        ))}
 
-          return (
-            <div key={slot}>
-              <p className="mb-1 text-[11px] text-ink/40">
-                {slot === 0 ? "Image principale" : "Image au survol (optionnel)"}
-              </p>
-              <div className="relative aspect-square overflow-hidden rounded-lg border border-powder/40 bg-powder/10">
-                {image ? (
-                  <>
-                    <Image src={image.url} alt="" fill className="object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => handleRemove(slot)}
-                      className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-ink/70 text-white hover:bg-ink"
-                      aria-label="Supprimer l'image"
-                    >
-                      <X size={14} />
-                    </button>
-                  </>
-                ) : (
-                  <label className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2 text-ink/40 hover:text-navy">
-                    {isUploading ? (
-                      <span className="text-xs">Téléchargement...</span>
-                    ) : (
-                      <>
-                        <Upload size={20} strokeWidth={1.5} />
-                        <span className="text-xs">Choisir une image</span>
-                      </>
-                    )}
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      onChange={(e) => handleFileSelect(e, slot)}
-                      disabled={isUploading}
-                      className="hidden"
-                    />
-                  </label>
-                )}
-              </div>
-            </div>
-          );
-        })}
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+          className="flex aspect-square flex-col items-center justify-center rounded-lg border-2 border-dashed border-powder/40 transition-colors hover:border-navy/40 disabled:opacity-50"
+        >
+          {isUploading ? (
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-navy/20 border-t-navy" />
+          ) : (
+            <>
+              <Upload size={24} className="text-ink/30" strokeWidth={1.5} />
+              <span className="mt-1 text-xs text-ink/40">Ajouter</span>
+            </>
+          )}
+        </button>
       </div>
 
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleUpload}
+      />
     </div>
   );
 }
