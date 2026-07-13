@@ -1,17 +1,19 @@
-import {
-  getDashboardStats,
-  getMonthlyRevenue,
-  getOrdersByStatus,
-} from "@/lib/admin/dashboard";
-import {
-  DollarSign,
-  ShoppingBag,
-  Package,
-  Clock,
-  TrendingUp,
-  TrendingDown,
-  Minus,
+// path: app/admin/page.tsx (or your dashboard layout route path)
+import React from "react";
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  Minus, 
+  DollarSign, 
+  ShoppingCart, 
+  Clock, 
+  Package 
 } from "lucide-react";
+import { 
+  getDashboardStats, 
+  getMonthlyRevenue, 
+  getOrdersByStatus 
+} from "@/lib/admin/dashboard"; // Update this import match path to your actual query file
 
 export default async function AdminDashboardPage() {
   const stats = await getDashboardStats();
@@ -20,36 +22,36 @@ export default async function AdminDashboardPage() {
 
   const statCards = [
     {
-      title: "Chiffre d'affaires",
+      title: "Chiffre d'affaires global",
       value: `${stats.totalRevenue.toLocaleString()} DA`,
       icon: DollarSign,
-      change: stats.revenueChangePercent,
-      color: "text-emerald-500",
+      color: "text-blue-600",
+      bg: "bg-blue-50",
+      change: null,
+    },
+    {
+      title: "Revenus du mois",
+      value: `${stats.revenueThisMonth.toLocaleString()} DA`,
+      icon: TrendingUp,
+      color: "text-emerald-600",
       bg: "bg-emerald-50",
+      change: stats.revenueChangePercent,
     },
     {
       title: "Commandes actives",
-      value: stats.activeOrders,
-      icon: ShoppingBag,
+      value: stats.activeOrders.toString(),
+      icon: ShoppingCart,
+      color: "text-purple-600",
+      bg: "bg-purple-50",
       change: null,
-      color: "text-blue-500",
-      bg: "bg-blue-50",
     },
     {
       title: "En attente",
-      value: stats.pendingOrders,
+      value: stats.pendingOrders.toString(),
       icon: Clock,
-      change: null,
-      color: "text-amber-500",
+      color: "text-amber-600",
       bg: "bg-amber-50",
-    },
-    {
-      title: "Produits",
-      value: stats.totalProducts,
-      icon: Package,
       change: null,
-      color: "text-purple-500",
-      bg: "bg-purple-50",
     },
   ];
 
@@ -57,36 +59,34 @@ export default async function AdminDashboardPage() {
   const maxOrders = Math.max(...ordersByStatus.map((o) => o.count), 1);
 
   return (
-    <div className="p-6 sm:p-8">
-      {/* Header */}
+    <div className="p-6 sm:p-8 max-w-7xl mx-auto">
+      {/* Header Info */}
       <div className="mb-8">
-        <h1 className="font-display text-2xl text-ink sm:text-3xl">Tableau de bord</h1>
-        <p className="mt-1 text-sm text-ink/50">
-          Vue d'ensemble de votre boutique
-        </p>
+        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Tableau de bord</h1>
+        <p className="mt-1 text-sm text-gray-500">Vue d'ensemble en temps réel de votre boutique</p>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats KPI Cards Grid */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => {
           const Icon = card.icon;
           return (
             <div
               key={card.title}
-              className="rounded-xl border border-powder/30 bg-white/50 p-6 shadow-sm transition-all hover:shadow-md"
+              className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
             >
               <div className="flex items-center justify-between">
                 <div className={`rounded-full ${card.bg} p-2.5`}>
-                  <Icon size={18} className={card.color} strokeWidth={1.5} />
+                  <Icon size={18} className={card.color} strokeWidth={2} />
                 </div>
                 {card.change !== null && (
                   <div
-                    className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${
+                    className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
                       card.change > 0
-                        ? "text-emerald-600 bg-emerald-50"
+                        ? "text-emerald-700 bg-emerald-50"
                         : card.change < 0
-                        ? "text-red-600 bg-red-50"
-                        : "text-ink/40 bg-powder/20"
+                        ? "text-red-700 bg-red-50"
+                        : "text-gray-500 bg-gray-50"
                     }`}
                   >
                     {card.change > 0 ? (
@@ -96,54 +96,65 @@ export default async function AdminDashboardPage() {
                     ) : (
                       <Minus size={12} />
                     )}
-                    {card.change !== null && `${Math.abs(Math.round(card.change))}%`}
+                    {`${Math.abs(Math.round(card.change))}%`}
                   </div>
                 )}
               </div>
-              <p className="mt-3 text-2xl font-semibold text-ink">{card.value}</p>
-              <p className="text-xs uppercase tracking-widest text-ink/40">{card.title}</p>
+              <p className="mt-4 text-2xl font-bold tracking-tight text-gray-900">{card.value}</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-gray-400 mt-1">{card.title}</p>
             </div>
           );
         })}
       </div>
 
-      {/* Charts */}
+      {/* Main Charts Containers section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Revenue Chart */}
-        <div className="rounded-xl border border-powder/30 bg-white/50 p-6 shadow-sm">
-          <h2 className="font-display text-lg text-ink">Revenus mensuels</h2>
-          <p className="text-sm text-ink/40">6 derniers mois</p>
-
-          <div className="mt-6 h-48">
-            <div className="flex h-full items-end justify-between gap-2">
-              {monthlyRevenue.map((item) => (
-                <div key={item.month} className="flex flex-1 flex-col items-center gap-2">
-                  <div
-                    className="w-full rounded-t bg-navy/20 transition-all hover:bg-navy/30"
-                    style={{
-                      height: `${(item.revenue / maxRevenue) * 100}%`,
-                      minHeight: item.revenue > 0 ? "8px" : "0",
-                    }}
-                  />
-                  <span className="text-[10px] uppercase text-ink/40">{item.month}</span>
-                </div>
-              ))}
-            </div>
+        {/* Revenue Chart Component Card */}
+        <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">Revenus mensuels</h2>
+            <p className="text-sm text-gray-400">Suivi sur les 6 derniers mois d'activité</p>
           </div>
 
-          <div className="mt-4 flex justify-between border-t border-powder/30 pt-3 text-xs text-ink/40">
+          {/* Interactive CSS Tooltip Chart Structure Layout */}
+          <div className="mt-8 h-48 flex items-end justify-between gap-3 px-2">
+            {monthlyRevenue.map((item) => (
+              <div key={item.month} className="group relative flex flex-1 flex-col items-center gap-2 h-full justify-end">
+                
+                {/* CSS Tooltip visible dynamically on Hover */}
+                <div className="absolute -top-8 scale-0 transition-all rounded bg-gray-900 px-2 py-1 text-[10px] font-medium text-white shadow group-hover:scale-100 z-10 whitespace-nowrap">
+                  {item.revenue.toLocaleString()} DA
+                </div>
+                
+                <div
+                  className="w-full rounded-t bg-blue-600/20 transition-all group-hover:bg-blue-600/50 cursor-pointer"
+                  style={{
+                    height: `${(item.revenue / maxRevenue) * 100}%`,
+                    minHeight: item.revenue > 0 ? "6px" : "2px",
+                  }}
+                />
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mt-1 capitalize">
+                  {item.month}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 flex justify-between border-t border-gray-100 pt-4 text-xs font-medium text-gray-400">
             <span>0 DA</span>
-            <span>Ce mois: {stats.revenueThisMonth.toLocaleString()} DA</span>
+            <span className="text-blue-600 font-semibold">Ce mois: {stats.revenueThisMonth.toLocaleString()} DA</span>
             <span>{maxRevenue.toLocaleString()} DA</span>
           </div>
         </div>
 
-        {/* Orders by Status */}
-        <div className="rounded-xl border border-powder/30 bg-white/50 p-6 shadow-sm">
-          <h2 className="font-display text-lg text-ink">Commandes par statut</h2>
-          <p className="text-sm text-ink/40">Répartition actuelle</p>
+        {/* Orders Status Tracking Card */}
+        <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">Commandes par statut</h2>
+            <p className="text-sm text-gray-400">Répartition actuelle du flux de commandes</p>
+          </div>
 
-          <div className="mt-6 space-y-3">
+          <div className="mt-6 space-y-4 my-auto">
             {ordersByStatus.map((item) => {
               const percentage = (item.count / maxOrders) * 100;
               const colors = {
@@ -151,19 +162,19 @@ export default async function AdminDashboardPage() {
                 PROCESSING: "bg-blue-500",
                 SHIPPED: "bg-purple-500",
                 DELIVERED: "bg-emerald-500",
-                CANCELLED: "bg-red-400",
+                CANCELLED: "bg-red-500",
               };
 
               return (
-                <div key={item.status} className="space-y-1">
+                <div key={item.status} className="space-y-1.5">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-ink/60">{item.label}</span>
-                    <span className="font-medium text-ink">{item.count}</span>
+                    <span className="text-gray-600 font-medium">{item.label}</span>
+                    <span className="font-bold text-gray-900">{item.count}</span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-powder/20">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
                     <div
-                      className={`h-full rounded-full ${colors[item.status]}`}
-                      style={{ width: `${Math.max(percentage, 0.5)}%` }}
+                      className={`h-full rounded-full transition-all duration-500 ${colors[item.status]}`}
+                      style={{ width: `${item.count > 0 ? Math.max(percentage, 2) : 0}%` }}
                     />
                   </div>
                 </div>
@@ -171,8 +182,8 @@ export default async function AdminDashboardPage() {
             })}
           </div>
 
-          <div className="mt-4 border-t border-powder/30 pt-3 text-xs text-ink/40">
-            Total: {ordersByStatus.reduce((acc, o) => acc + o.count, 0)} commandes
+          <div className="mt-6 border-t border-gray-100 pt-4 text-xs font-semibold text-gray-400">
+            Total global: {ordersByStatus.reduce((acc, o) => acc + o.count, 0).toLocaleString()} commandes
           </div>
         </div>
       </div>

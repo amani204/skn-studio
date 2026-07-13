@@ -1,14 +1,13 @@
 "use client";
 
-import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { AdminNotifications } from "./AdminNotifications"; // Import our new client component
 
 interface AdminTopbarProps {
   title: string;
   subtitle?: string;
   adminName?: string;
   adminEmail?: string;
-  notifications?: number;
   actions?: React.ReactNode;
 }
 
@@ -17,7 +16,6 @@ export function AdminTopbar({
   subtitle,
   adminName,
   adminEmail,
-  notifications,
   actions,
 }: AdminTopbarProps) {
   const initials = (adminName ?? adminEmail ?? "A")
@@ -29,9 +27,9 @@ export function AdminTopbar({
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-powder/30 bg-white/80 px-4 backdrop-blur-sm lg:px-8">
-      {/* Title */}
+      {/* Title block */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <h1 className="font-display text-lg  text-ink">
+        <h1 className="font-display text-lg text-ink font-bold">
           {title}
         </h1>
         {subtitle ? (
@@ -39,24 +37,13 @@ export function AdminTopbar({
         ) : null}
       </div>
 
-      {/* Actions */}
+      {/* Optional Topbar Context Actions placeholder */}
       {actions}
 
-      {/* Notifications */}
-      <button
-        type="button"
-        className="relative rounded-lg p-2 text-ink/40 hover:bg-powder/10"
-        aria-label="Notifications"
-      >
-        <Bell size={18} strokeWidth={1.5} />
-        {notifications && notifications > 0 ? (
-          <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 font-sans text-[9px] font-semibold text-white">
-            {notifications}
-          </span>
-        ) : null}
-      </button>
+      {/* Dynamic Inventory Tracker Dropdown Replacing the Old Static Button */}
+      <AdminNotifications />
 
-      {/* Admin Avatar */}
+      {/* Admin Avatar Identity Block */}
       <div className="flex items-center gap-3 border-l border-navy/40 pl-3">
         <Avatar className="h-8 w-8">
           <AvatarFallback className="bg-navy font-sans text-xs font-medium text-white">

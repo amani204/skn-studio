@@ -1,9 +1,8 @@
+// path: lib/dashboard.ts (or wherever your dashboard queries live)
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { OrderStatus } from "@prisma/client";
 
-// Orders that represent real (or likely-to-complete) revenue.
-// Cancelled orders are excluded everywhere revenue is calculated.
 const REVENUE_STATUSES: OrderStatus[] = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED"];
 const ACTIVE_STATUSES: OrderStatus[] = ["PENDING", "PROCESSING", "SHIPPED"];
 
@@ -11,52 +10,59 @@ export type DashboardStats = {
   totalRevenue: number;
   revenueThisMonth: number;
   revenueLastMonth: number;
-  /** null when last month had zero revenue - a percentage change is meaningless there */
   revenueChangePercent: number | null;
   activeOrders: number;
   pendingOrders: number;
   totalProducts: number;
 };
 
-function startOfMonth(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-}
-
 export async function getDashboardStats(): Promise<DashboardStats> {
   const now = new Date();
-  const thisMonthStart = startOfMonth(now);
-  const lastMonthStart = new Date(thisMonthStart);
-  lastMonthStart.setMonth(lastMonthStart.getMonth() - 1);
+  
+  // Set explicit midnight boundaries to prevent floating timestamp bugs
+  const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
-  const [revenueOrders, activeOrders, pendingOrders, totalProducts] = await Promise.all([
-    prisma.order.findMany({
+  // Let the database handle the calculation aggregation logic
+  const [
+    totalRevenueAgg,
+    thisMonthRevenueAgg,
+    lastMonthRevenueAgg,
+    activeOrders,
+    pendingOrders,
+    totalProducts
+  ] = await Promise.all([
+    prisma.order.aggregate({
       where: { status: { in: REVENUE_STATUSES } },
-      select: { total: true, createdAt: true },
+      _sum: { total: true }
+    }),
+    prisma.order.aggregate({
+      where: { 
+        status: { in: REVENUE_STATUSES },
+        createdAt: { gte: thisMonthStart }
+      },
+      _sum: { total: true }
+    }),
+    prisma.order.aggregate({
+      where: { 
+        status: { in: REVENUE_STATUSES },
+        createdAt: { gte: lastMonthStart, lt: thisMonthStart }
+      },
+      _sum: { total: true }
     }),
     prisma.order.count({ where: { status: { in: ACTIVE_STATUSES } } }),
     prisma.order.count({ where: { status: "PENDING" } }),
     prisma.product.count(),
   ]);
 
-  let totalRevenue = 0;
-  let revenueThisMonth = 0;
-  let revenueLastMonth = 0;
-
-  for (const order of revenueOrders) {
-    const amount = Number(order.total);
-    totalRevenue += amount;
-
-    if (order.createdAt >= thisMonthStart) {
-      revenueThisMonth += amount;
-    } else if (order.createdAt >= lastMonthStart && order.createdAt < thisMonthStart) {
-      revenueLastMonth += amount;
-    }
-  }
+  const totalRevenue = Number(totalRevenueAgg._sum.total) || 0;
+  const revenueThisMonth = Number(thisMonthRevenueAgg._sum.total) || 0;
+  const revenueLastMonth = Number(lastMonthRevenueAgg._sum.total) || 0;
 
   const revenueChangePercent =
     revenueLastMonth > 0
       ? ((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 100
-      : revenueThisMonth > 0
+      : revenueLastMonth === 0 && revenueThisMonth > 0
       ? 100
       : null;
 
@@ -85,13 +91,11 @@ export async function getMonthlyRevenue(monthsBack = 6): Promise<MonthlyRevenue[
     select: { total: true, createdAt: true },
   });
 
-  // Pre-fill every month in range, even ones with zero revenue,
-  // so the chart doesn't silently skip a quiet month.
   const buckets: MonthlyRevenue[] = [];
   for (let i = monthsBack - 1; i >= 0; i--) {
     const bucketDate = new Date(now.getFullYear(), now.getMonth() - i, 1);
     buckets.push({
-      month: bucketDate.toLocaleDateString("fr-FR", { month: "short" }),
+      month: bucketDate.toLocaleDateString("fr-FR", { month: "short" }).replace(".", ""),
       revenue: 0,
     });
   }
@@ -120,15 +124,18 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
 };
 
 export async function getOrdersByStatus(): Promise<OrdersByStatus[]> {
-  const statuses: OrderStatus[] = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
+  // Uses a single optimized database group-by scan query instead of multiple counts loop
+  const groupings = await prisma.order.groupBy({
+    by: ["status"],
+    _count: { _all: true },
+  });
 
-  const counts = await Promise.all(
-    statuses.map((status) => prisma.order.count({ where: { status } }))
-  );
+  const countsMap = new Map(groupings.map(g => [g.status, g._count._all]));
+  const orderOrder: OrderStatus[] = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
 
-  return statuses.map((status, i) => ({
+  return orderOrder.map((status) => ({
     status,
     label: STATUS_LABELS[status],
-    count: counts[i],
+    count: countsMap.get(status) || 0,
   }));
 }
