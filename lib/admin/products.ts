@@ -1,52 +1,75 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
 
-const LOW_STOCK_THRESHOLD = 10;
-
-export async function getAdminProducts(options?: { lowStockOnly?: boolean }) {
-  const products = await prisma.product.findMany({
-    where: options?.lowStockOnly ? { stock: { lt: LOW_STOCK_THRESHOLD } } : undefined,
-    orderBy: { createdAt: "desc" },
-    include: {
-      category: true,
-      images: { orderBy: { order: "asc" } },
-    },
-  });
-
-  return products.map((p) => ({
-    ...p,
-    price: Number(p.price),
-    oldPrice: p.oldPrice ? Number(p.oldPrice) : null,
-  }));
+/**
+ * Fetches all products from the database, ordered by creation date.
+ */
+export async function getAllProducts() {
+  try {
+    return await prisma.product.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Database error in getAllProducts:", error);
+    throw new Error("Impossible de récupérer les produits.");
+  }
 }
 
-export async function getAdminProductById(id: string) {
-  const product = await prisma.product.findUnique({
-    where: { id },
-    include: {
-      category: true,
-      images: { orderBy: { order: "asc" } },
-    },
-  });
-
-  if (!product) return null;
-
-  return {
-    ...product,
-    price: Number(product.price),
-    oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
-  };
+/**
+ * Fetches products that are below or equal to a specific stock threshold.
+ */
+export async function getLowStockProducts(threshold = 20) {
+  try {
+    return await prisma.product.findMany({
+      where: {
+        stock: {
+          lte: threshold,
+        },
+      },
+      orderBy: {
+        stock: "asc", // Show completely out-of-stock items first
+      },
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Database error in getLowStockProducts:", error);
+    throw new Error("Impossible de récupérer les produits en rupture de stock.");
+  }
 }
 
-export async function getCategoriesForAdmin() {
-  return prisma.category.findMany({ orderBy: { name: "asc" } });
-}
-
-export async function getFeaturedIconCount(excludeProductId?: string) {
-  return prisma.product.count({
-    where: {
-      isFeatured: true,
-      ...(excludeProductId ? { id: { not: excludeProductId } } : {}),
-    },
-  });
+/**
+ * Fetches a single product by its unique ID.
+ */
+export async function getProductById(id: string) {
+  try {
+    return await prisma.product.findUnique({
+      where: { id },
+      include: {
+        category: true,
+        images: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+      },
+    });
+  } catch (error) {
+    console.error(`Database error in getProductById for ID ${id}:`, error);
+    throw new Error("Impossible de récupérer les détails du produit.");
+  }
 }

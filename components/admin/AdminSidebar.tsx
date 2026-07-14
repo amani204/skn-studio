@@ -144,7 +144,7 @@ export function AdminMobileBottomBar({ active, onChange, onSignOut }: MobileBott
         {/* Dropdown Menu */}
         <div
           id="admin-more-dropdown"
-          className="absolute bottom-14 right-0 hidden min-w-[160px] rounded-xl border border-powder/30 bg-white/95 p-2 shadow-xl"
+          className="absolute bottom-14 right-0 hidden min-w-40 rounded-xl border border-powder/30 bg-white/95 p-2 shadow-xl"
         >
           {extraItems.map((item) => {
             const Icon = item.icon;

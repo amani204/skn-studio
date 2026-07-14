@@ -1,12 +1,13 @@
+// path: app/(admin)/admin/(dashboard)/layout.tsx
 "use client";
 
-import { useState } from "react";
+import React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AdminSidebar, AdminMobileBottomBar } from "@/components/admin/AdminSidebar";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import type { AdminSection } from "@/components/admin/AdminSidebar";
 
-export default function AdminLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -28,12 +29,11 @@ export default function AdminLayout({
 
   const handleSectionChange = (section: AdminSection) => {
     const routes: Record<AdminSection, string> = {
-      dashboard: "/admin/dashboard",
+      dashboard: "/admin",
       products: "/admin/products",
       orders: "/admin/orders",
       reviews: "/admin/reviews",
       deliveryRates: "/admin/delivery-rates",
-    
     };
     router.push(routes[section]);
   };
@@ -43,7 +43,7 @@ export default function AdminLayout({
   };
 
   return (
-    <div className="min-h-screen bg-cream font-sans">
+    <div className="min-h-screen bg-[#FDFBF7] font-sans">
       {/* Desktop Sidebar */}
       <AdminSidebar
         active={activeSection}
@@ -58,7 +58,7 @@ export default function AdminLayout({
         onSignOut={handleSignOut}
       />
 
-      {/* Main Content */}
+      {/* Main Content Pane */}
       <div className="lg:pl-64 pb-16 lg:pb-0">
         {/* Topbar */}
         <AdminTopbar
@@ -66,11 +66,10 @@ export default function AdminLayout({
           subtitle="Vue d'ensemble de votre boutique"
           adminName="Admin"
           adminEmail="admin@sknstudio.dz"
-          notifications={5}
         />
 
-        {/* Page Content */}
-        <main className="p-6 sm:p-8">
+        {/* Page Content Container */}
+        <main className="p-6 sm:p-8 block">
           {children}
         </main>
       </div>

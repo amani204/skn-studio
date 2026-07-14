@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display_SC, Inter } from "next/font/google";
-import Navbar from "@/components/storefront/Navbar";
-import CartSlider from "@/components/storefront/CartSlider";
-import WhatsAppButton from "@/components/storefront/WhatsappButton";
 import { CartProvider } from "@/context/CartContext";
-import Footer from "@/components/storefront/Footer";
 import "./globals.css";
 
 const playfair = Playfair_Display_SC({
@@ -31,12 +27,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className={`${playfair.variable} ${inter.variable}`}>
-      <body>
+      <body className="antialiased bg-white text-ink">
         <CartProvider>
-         
-      
           {children}
-         
         </CartProvider>
       </body>
     </html>
