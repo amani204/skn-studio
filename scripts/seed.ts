@@ -3,6 +3,18 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+// Explicit interface to prevent TypeScript union inference bugs
+interface SeedProduct {
+  name: string;
+  slug: string;
+  description: string;
+  price: number;
+  oldPrice: number | null;
+  stock: number;
+  categorySlug: string;
+  images: string[];
+}
+
 async function main() {
   console.log("🌱 Seeding database...");
 
@@ -46,7 +58,7 @@ async function main() {
   }
 
   // ==================== PRODUCTS ====================
-  const products = [
+  const products: SeedProduct[] = [
     {
       name: "Le Sérum Barrière",
       slug: "barrier-serum",
@@ -56,10 +68,7 @@ async function main() {
       oldPrice: 9500,
       stock: 25,
       categorySlug: "serums",
-      images: [
-        "/products/serum-front.jpg",
-        "/products/serum-texture.jpg",
-      ],
+      images: [],
     },
     {
       name: "Nettoyant Nuage",
@@ -70,10 +79,7 @@ async function main() {
       oldPrice: null,
       stock: 30,
       categorySlug: "cleansers",
-      images: [
-        "/products/cleanser-front.jpg",
-        "/products/cleanser-texture.jpg",
-      ],
+      images: [],
     },
     {
       name: "Crème Barrière Quotidienne",
@@ -84,10 +90,7 @@ async function main() {
       oldPrice: 7200,
       stock: 20,
       categorySlug: "creams",
-      images: [
-        "/products/cream-front.jpg",
-        "/products/cream-texture.jpg",
-      ],
+      images: [],
     },
     {
       name: "Huile de Renouveau Nocturne",
@@ -98,10 +101,7 @@ async function main() {
       oldPrice: null,
       stock: 15,
       categorySlug: "oils",
-      images: [
-        "/products/oil-front.jpg",
-        "/products/oil-texture.jpg",
-      ],
+      images: [],
     },
   ];
 
