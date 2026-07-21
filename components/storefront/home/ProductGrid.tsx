@@ -163,6 +163,7 @@ export default function ProductGrid() {
           <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
           <span className="absolute -bottom-1 left-0 h-[1.5px] w-0 bg-navy transition-all duration-500 group-hover:w-full" />
         </Link>
+        
       </div>
     </section>
   );

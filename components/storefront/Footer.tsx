@@ -50,8 +50,17 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-6 text-[10px] text-ink/25">
-          © {new Date().getFullYear()} SKN Studio by Amani        </div>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[10px] text-ink/25">
+          <span>© {new Date().getFullYear()} SKN Studio by  <a
+            href="https://www.instagram.com/amani.dev/"  
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-navy transition-colors"
+          >
+            AMANI
+          </a> </span>
+          <span className="hidden sm:inline">·</span>
+        </div>
       </div>
     </footer>
   );

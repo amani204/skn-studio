@@ -1,47 +1,39 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 import { requireAdmin } from "@/lib/admin/admin-auth";
+import { createProductSchema } from "@/lib/validation/product";
+import { createProduct } from "@/lib/admin/products";
+import { AppError } from "@/lib/errors";
 
-export async function POST(req: NextRequest) {
+// POST /api/admin/products/new — create a product (with its images)
+export async function POST(req: Request) {
+  const session = await requireAdmin();
+  if (!session) {
+    return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
+  }
+
+  let body: unknown;
   try {
-    const session = await requireAdmin();
-    if (!session) {
-      return NextResponse.json({ error: "Accès interdit" }, { status: 403 });
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corps de requête JSON invalide." }, { status: 400 });
+  }
+
+  try {
+    const data = createProductSchema.parse(body);
+    const product = await createProduct(data);
+    return NextResponse.json({ product }, { status: 201 });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        { error: "Données invalides.", details: error.flatten().fieldErrors },
+        { status: 400 }
+      );
     }
-
-    const body = await req.json();
-    const { name, description, price, oldPrice, stock, categoryId, isPublished, isFeatured } = body;
-
-    if (!name || !description || !price || !categoryId) {
-      return NextResponse.json({ error: "Champs obligatoires manquants" }, { status: 400 });
+    if (error instanceof AppError) {
+      return NextResponse.json({ error: error.message }, { status: error.statusCode });
     }
-
-    // Generate a URL-safe unique slug from the product name
-    const baseSlug = name
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "");
-    
-    const uniqueSlug = `${baseSlug}-${Date.now().toString().slice(-4)}`;
-
-    const newProduct = await prisma.product.create({
-      data: {
-        name,
-        slug: uniqueSlug,
-        description,
-        price: parseFloat(price),
-        oldPrice: oldPrice ? parseFloat(oldPrice) : null,
-        stock: parseInt(stock, 10) || 0,
-        categoryId,
-        isPublished: isPublished !== undefined ? isPublished : true,
-        isFeatured: isFeatured !== undefined ? isFeatured : false,
-      },
-    });
-
-    return NextResponse.json({ success: true, product: newProduct });
-  } catch (error: any) {
-    console.error("Error creating product:", error);
-    return NextResponse.json({ error: "Erreur lors de la création du produit" }, { status: 500 });
+    console.error("POST /api/admin/products/new error:", error);
+    return NextResponse.json({ error: "Impossible de créer le produit." }, { status: 500 });
   }
 }

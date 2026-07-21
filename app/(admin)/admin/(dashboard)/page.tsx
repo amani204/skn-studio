@@ -13,7 +13,7 @@ import {
   getDashboardStats, 
   getMonthlyRevenue, 
   getOrdersByStatus 
-} from "@/lib/admin/dashboard"; // Update this import match path to your actual query file
+} from "@/lib/admin/dashboard"; 
 
 export default async function AdminDashboardPage() {
   const stats = await getDashboardStats();
@@ -133,7 +133,7 @@ export default async function AdminDashboardPage() {
                     minHeight: item.revenue > 0 ? "6px" : "2px",
                   }}
                 />
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mt-1 capitalize">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mt-1">
                   {item.month}
                 </span>
               </div>

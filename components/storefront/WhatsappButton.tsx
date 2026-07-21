@@ -3,18 +3,13 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
-// Replace with your real number: country code + number, digits only,
-// no "+", no spaces, no leading zero on the local part.
-// e.g. Algeria +213 5 55 12 34 56 -> "213555123456"
-const WHATSAPP_NUMBER = "213555123456";
-const DEFAULT_MESSAGE = "Bonjour, j'ai une question sur vos produits.";
+const WHATSAPP_NUMBER = "213551386587";
+const DEFAULT_MESSAGE = "Bonjour SKN Studio, j'ai une question sur vos produits.";
 
 export default function WhatsAppButton() {
   const buttonRef = useRef<HTMLAnchorElement>(null);
   const ringRef = useRef<HTMLSpanElement>(null);
 
-  // Entrance — arrives after the page has settled, not competing with
-  // the hero/navbar animations for attention.
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -23,7 +18,6 @@ export default function WhatsAppButton() {
         { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.7)", delay: 1.2 }
       );
 
-      // Idle pulse ring, looping — the classic "someone's here" affordance
       gsap.to(ringRef.current, {
         scale: 1.8,
         opacity: 0,

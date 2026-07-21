@@ -89,10 +89,13 @@ export default function CartSlider() {
               <p className="mt-4 text-sm text-ink/40">Votre panier est vide</p>
               <Link
                 href="/shop"
-                className="mt-6 border-b border-navy/20 pb-0.5 text-sm font-medium uppercase tracking-widest text-navy/60 transition-colors hover:text-navy"
+                className="mt-6 group relative inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-navy/60 transition-colors hover:text-navy sm:text-sm"
               >
                 Continuer vos achats
+                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+               <span className="absolute -bottom-1 left-0 h-[1.5px] w-0 bg-navy transition-all duration-500 group-hover:w-full" />
               </Link>
+          
             </div>
           ) : (
             <div className="space-y-0 divide-y divide-navy/10">

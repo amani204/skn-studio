@@ -15,7 +15,7 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const [website, setWebsite] = useState(""); // honeypot
+  const [website, setWebsite] = useState(""); 
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -54,7 +54,7 @@ export default function Contact() {
       email: formData.get("email") as string,
       subject: formData.get("subject") as string,
       message: formData.get("message") as string,
-      website, // honeypot value
+      website, 
     };
 
     try {
@@ -89,13 +89,13 @@ export default function Contact() {
       icon: Mail,
       title: "Email",
       details: "contact@sknstudio.dz",
-      href: "mailto:contact@sknstudio.dz",
+      href: "mailto:uniamani2022@gmail.com",
     },
     {
       icon: Phone,
       title: "Téléphone",
-      details: "+213 5 55 12 34 56",
-      href: "tel:+213555123456",
+      details: "+213 551386587",
+      href: "tel:+213551386587",
     },
     {
       icon: MapPin,

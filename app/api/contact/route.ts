@@ -10,7 +10,7 @@ const contactSchema = z.object({
   email: z.string().trim().email().max(200),
   subject: z.string().trim().min(1).max(200),
   message: z.string().trim().min(1).max(5000),
-  website: z.string().max(0).optional(), // honeypot — must stay empty
+  website: z.string().max(0).optional(), 
 });
 
 function getClientIp(req: NextRequest): string {
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
 
   try {
     await resend.emails.send({
-      from: "Contact Form <onboarding@resend.dev>", // swap to your verified domain later
+      from: "Contact Form <onboarding@resend.dev>", 
       to: contactEmail,
       replyTo: email,
       subject: `[Contact] ${subject}`,

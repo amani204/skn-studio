@@ -1,74 +1,70 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+import { ZodError, z } from "zod";
 import { requireAdmin } from "@/lib/admin/admin-auth";
+import { updateProductSchema } from "@/lib/validation/product";
+import { updateProduct, deleteProduct } from "@/lib/admin/products";
+import { AppError } from "@/lib/errors";
 
-type Context = {
-  params: { id: string };
-};
+const paramsSchema = z.object({ id: z.string().cuid("Identifiant de produit invalide.") });
 
-/**
- * PUT /api/admin/product/[id]
- * Updates a specific product's primary details
- */
-export async function PUT(req: NextRequest, { params }: Context) {
+// PUT /api/admin/products/[id] — update a product
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
+  const session = await requireAdmin();
+  if (!session) {
+    return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
+  }
+
+  const parsedParams = paramsSchema.safeParse(params);
+  if (!parsedParams.success) {
+    return NextResponse.json({ error: "Identifiant de produit invalide." }, { status: 400 });
+  }
+
+  let body: unknown;
   try {
-    const session = await requireAdmin();
-    if (!session) {
-      return NextResponse.json({ error: "Accès interdit" }, { status: 403 });
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corps de requête JSON invalide." }, { status: 400 });
+  }
+
+  try {
+    const data = updateProductSchema.parse(body);
+    const product = await updateProduct(parsedParams.data.id, data);
+    return NextResponse.json({ product }, { status: 200 });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        { error: "Données invalides.", details: error.flatten().fieldErrors },
+        { status: 400 }
+      );
     }
-
-    const { id } = params;
-    const body = await req.json();
-
-    // Generate clean slug if the name changed
-    let slugData = {};
-    if (body.name) {
-      const cleanSlug = body.name
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)+/g, "");
-      slugData = { slug: cleanSlug };
+    if (error instanceof AppError) {
+      return NextResponse.json({ error: error.message }, { status: error.statusCode });
     }
-
-    const updatedProduct = await prisma.product.update({
-      where: { id },
-      data: {
-        name: body.name,
-        price: body.price !== undefined ? parseFloat(body.price) : undefined,
-        stock: body.stock !== undefined ? parseInt(body.stock, 10) : undefined,
-        isPublished: body.isPublished !== undefined ? body.isPublished : undefined,
-        ...slugData
-      },
-    });
-
-    return NextResponse.json({ success: true, product: updatedProduct });
-  } catch (error: any) {
-    console.error(`Error updating product [ID: ${params.id}]:`, error);
-    return NextResponse.json({ error: "Erreur lors de la modification" }, { status: 500 });
+    console.error(`PUT /api/admin/products/${params.id} error:`, error);
+    return NextResponse.json({ error: "Impossible de mettre à jour le produit." }, { status: 500 });
   }
 }
 
-/**
- * DELETE /api/admin/product/[id]
- * Deletes a product permanently from the database
- */
-export async function DELETE(req: NextRequest, { params }: Context) {
+// DELETE /api/admin/products/[id] — delete a product
+export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+  const session = await requireAdmin();
+  if (!session) {
+    return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
+  }
+
+  const parsedParams = paramsSchema.safeParse(params);
+  if (!parsedParams.success) {
+    return NextResponse.json({ error: "Identifiant de produit invalide." }, { status: 400 });
+  }
+
   try {
-    const session = await requireAdmin();
-    if (!session) {
-      return NextResponse.json({ error: "Accès interdit" }, { status: 403 });
+    await deleteProduct(parsedParams.data.id);
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    if (error instanceof AppError) {
+      return NextResponse.json({ error: error.message }, { status: error.statusCode });
     }
-
-    const { id } = params;
-
-    await prisma.product.delete({
-      where: { id },
-    });
-
-    return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error(`Error deleting product [ID: ${params.id}]:`, error);
-    return NextResponse.json({ error: "Erreur lors de la suppression" }, { status: 500 });
+    console.error(`DELETE /api/admin/products/${params.id} error:`, error);
+    return NextResponse.json({ error: "Impossible de supprimer le produit." }, { status: 500 });
   }
 }
