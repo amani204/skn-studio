@@ -153,7 +153,6 @@ export async function createProduct(data: CreateProductInput) {
     throw new AppError("Impossible de créer le produit.", 500);
   }
 }
-
 /**
  * Updates a product. If `images` is provided, the entire image set is
  * replaced (deleted + recreated) inside a transaction.
@@ -176,40 +175,46 @@ export async function updateProduct(id: string, data: UpdateProductInput) {
   }
 
   try {
-    return await prisma.$transaction(async (tx) => {
-      if (data.images) {
-        await tx.productImage.deleteMany({ where: { productId: id } });
-      }
+    return await prisma.$transaction(
+      async (tx) => {
+        if (data.images) {
+          await tx.productImage.deleteMany({ where: { productId: id } });
+        }
 
-      return tx.product.update({
-        where: { id },
-        data: {
-          ...(data.name !== undefined ? { name: data.name } : {}),
-          ...(data.description !== undefined ? { description: data.description } : {}),
-          ...(data.price !== undefined ? { price: data.price } : {}),
-          ...(data.oldPrice !== undefined ? { oldPrice: data.oldPrice } : {}),
-          ...(data.stock !== undefined ? { stock: data.stock } : {}),
-          ...(data.categoryId !== undefined ? { categoryId: data.categoryId } : {}),
-          ...(data.isPublished !== undefined ? { isPublished: data.isPublished } : {}),
-          ...(data.isFeatured !== undefined ? { isFeatured: data.isFeatured } : {}),
-          ...(data.images
-            ? {
-                images: {
-                  create: data.images.map((img, index) => ({
-                    url: img.url,
-                    alt: img.alt ?? null,
-                    order: img.order ?? index,
-                  })),
-                },
-              }
-            : {}),
-        },
-        include: {
-          category: { select: { name: true } },
-          images: { orderBy: { order: "asc" } },
-        },
-      });
-    });
+        return tx.product.update({
+          where: { id },
+          data: {
+            ...(data.name !== undefined ? { name: data.name } : {}),
+            ...(data.description !== undefined ? { description: data.description } : {}),
+            ...(data.price !== undefined ? { price: data.price } : {}),
+            ...(data.oldPrice !== undefined ? { oldPrice: data.oldPrice } : {}),
+            ...(data.stock !== undefined ? { stock: data.stock } : {}),
+            ...(data.categoryId !== undefined ? { categoryId: data.categoryId } : {}),
+            ...(data.isPublished !== undefined ? { isPublished: data.isPublished } : {}),
+            ...(data.isFeatured !== undefined ? { isFeatured: data.isFeatured } : {}),
+            ...(data.images
+              ? {
+                  images: {
+                    create: data.images.map((img, index) => ({
+                      url: img.url,
+                      alt: img.alt ?? null,
+                      order: img.order ?? index,
+                    })),
+                  },
+                }
+              : {}),
+          },
+          include: {
+            category: { select: { name: true } },
+            images: { orderBy: { order: "asc" } },
+          },
+        });
+      },
+      {
+        timeout: 15000, // 👈 Extended from default 5000ms to 15000ms to avoid dev transaction timeouts
+        maxWait: 5000,
+      }
+    );
   } catch (error: any) {
     if (error instanceof AppError) throw error;
     if (error?.code === "P2025") {
@@ -222,7 +227,6 @@ export async function updateProduct(id: string, data: UpdateProductInput) {
     throw new AppError("Impossible de mettre à jour le produit.", 500);
   }
 }
-
 /**
  * Deletes a product. Related ProductImages cascade automatically;
  * related OrderItems have productId set to null (order history is preserved).
