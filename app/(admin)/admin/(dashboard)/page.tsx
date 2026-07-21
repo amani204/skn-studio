@@ -1,4 +1,4 @@
-// path: app/admin/page.tsx (or your dashboard layout route path)
+
 import React from "react";
 import { 
   TrendingUp, 
@@ -13,8 +13,7 @@ import {
   getDashboardStats, 
   getMonthlyRevenue, 
   getOrdersByStatus 
-} from "@/lib/admin/dashboard"; 
-
+} from "@/lib/admin/dashboard";
 export default async function AdminDashboardPage() {
   const stats = await getDashboardStats();
   const monthlyRevenue = await getMonthlyRevenue(6);
@@ -59,11 +58,20 @@ export default async function AdminDashboardPage() {
   const maxOrders = Math.max(...ordersByStatus.map((o) => o.count), 1);
 
   return (
-    <div className="p-6 sm:p-8 max-w-7xl mx-auto">
-      {/* Header Info */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Tableau de bord</h1>
-        <p className="mt-1 text-sm text-gray-500">Vue d'ensemble en temps réel de votre boutique</p>
+    <div className="p-6 sm:p-10 max-w-7xl mx-auto space-y-10">
+      {/* Header */}
+      <div className="border-b border-powder/40 pb-5 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+        <div>
+          <h1 className="text-3xl font-display tracking-tight text-ink sm:text-4xl">
+            Tableau de bord
+          </h1>
+          <p className="mt-1 text-sm text-ink/60 font-body">
+            Vue d'ensemble en temps réel de votre boutique
+          </p>
+        </div>
+        <div className="text-xs font-mono uppercase tracking-widest text-navy bg-powder/20 px-3 py-1.5 rounded-full w-fit">
+          Direct Status • Live
+        </div>
       </div>
 
       {/* Stats KPI Cards Grid */}
@@ -73,7 +81,7 @@ export default async function AdminDashboardPage() {
           return (
             <div
               key={card.title}
-              className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+              className="rounded-lg border border-gray-100 bg-[#fffdf9] p-6 shadow-sm transition-all hover:shadow-md"
             >
               <div className="flex items-center justify-between">
                 <div className={`rounded-full ${card.bg} p-2.5`}>
@@ -110,7 +118,7 @@ export default async function AdminDashboardPage() {
       {/* Main Charts Containers section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Revenue Chart Component Card */}
-        <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm flex flex-col justify-between">
+        <div className="rounded-lg border border-gray-100 bg-[#fffdf9] p-6 shadow-sm flex flex-col justify-between">
           <div>
             <h2 className="text-lg font-bold text-gray-900">Revenus mensuels</h2>
             <p className="text-sm text-gray-400">Suivi sur les 6 derniers mois d'activité</p>
@@ -142,13 +150,13 @@ export default async function AdminDashboardPage() {
 
           <div className="mt-6 flex justify-between border-t border-gray-100 pt-4 text-xs font-medium text-gray-400">
             <span>0 DA</span>
-            <span className="text-blue-600 font-semibold">Ce mois: {stats.revenueThisMonth.toLocaleString()} DA</span>
+            <span className="text-blue-600 font-meduim">Ce mois: {stats.revenueThisMonth.toLocaleString()} DA</span>
             <span>{maxRevenue.toLocaleString()} DA</span>
           </div>
         </div>
 
         {/* Orders Status Tracking Card */}
-        <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm flex flex-col justify-between">
+        <div className="rounded-lg border border-gray-100 bg-[#fffdf9] p-6 shadow-sm flex flex-col justify-between">
           <div>
             <h2 className="text-lg font-bold text-gray-900">Commandes par statut</h2>
             <p className="text-sm text-gray-400">Répartition actuelle du flux de commandes</p>

@@ -5,8 +5,7 @@ import AboutPillars from "@/components/storefront/home/AboutPillars";
 import Testimonials from "@/components/storefront/home/Testimonials";
 import ShippingInfo from "@/components/storefront/home/ShippingInfo";
 import Contact from "@/components/storefront/home/Contact";
-import Navbar from "@/components/storefront/Navbar";
-import Footer from "@/components/storefront/Footer";
+
 
 export default function Home() {
   return (

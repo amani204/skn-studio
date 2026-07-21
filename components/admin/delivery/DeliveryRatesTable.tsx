@@ -68,8 +68,7 @@ export default function DeliveryRatesTable({ rates }: { rates: DeliveryRate[] })
 
       if (!res.ok) throw new Error();
 
-      // Update the "original" values this row compares against, so isDirty
-      // resets to false without needing a full page refresh.
+     
       rate.homePrice = Number(draft.homePrice);
       rate.deskPrice = Number(draft.deskPrice);
       rate.isActive = draft.isActive;

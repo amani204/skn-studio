@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { AdminNotifications } from "./AdminNotifications"; // Import our new client component
+import { AdminNotifications } from "./AdminNotifications"; 
 
 interface AdminTopbarProps {
   title: string;
@@ -26,7 +26,7 @@ export function AdminTopbar({
     .toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-powder/30 bg-white/80 px-4 backdrop-blur-sm lg:px-8">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-powder/30  bg-[#fffdf9] px-4 backdrop-blur-sm lg:px-8">
       {/* Title block */}
       <div className="flex min-w-0 flex-1 flex-col">
         <h1 className="font-display text-lg text-ink font-bold">

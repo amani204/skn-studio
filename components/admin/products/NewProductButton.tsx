@@ -8,7 +8,7 @@ export function NewProductButton() {
   return (
     <Link
       href="/admin/products/new"
-      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white font-medium text-sm hover:bg-slate-800 active:scale-[0.98] transition-all duration-150 shadow-sm"
+      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 border rounded-lg bg-navy text-sm font-medium text-white transition-all hover:bg-navy/80 hover:shadow-md"
     >
       <Plus className="w-4 h-4" />
       <span>Nouveau Produit</span>

@@ -1,7 +1,8 @@
-// path: app/(admin)/admin/(dashboard)/layout.tsx
+
 "use client";
 
 import React from "react";
+import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { AdminSidebar, AdminMobileBottomBar } from "@/components/admin/AdminSidebar";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
@@ -38,12 +39,13 @@ export default function DashboardLayout({
     router.push(routes[section]);
   };
 
-  const handleSignOut = () => {
-    router.push("/api/auth/signout");
+   const handleSignOut = () => {
+    signOut({ callbackUrl: "/admin/portal-97x-login" }); 
   };
 
+
   return (
-    <div className="min-h-screen bg-[#FDFBF7] font-sans">
+    <div className="min-h-screen bg-cream font-sans">
       {/* Desktop Sidebar */}
       <AdminSidebar
         active={activeSection}

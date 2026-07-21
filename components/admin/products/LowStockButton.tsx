@@ -12,7 +12,7 @@ export function LowStockButton({ count }: LowStockButtonProps) {
   return (
     <Link
       href="/admin/products/low-stock"
-      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-200/60 font-medium text-sm hover:bg-amber-100/80 active:scale-[0.98] transition-all duration-150"
+      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200/60 font-medium text-sm hover:bg-amber-100/80 active:scale-[0.98] transition-all duration-150"
     >
       <AlertTriangle className="w-4 h-4 text-amber-600" />
       <span>Stock Bas</span>

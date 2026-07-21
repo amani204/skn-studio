@@ -1,4 +1,3 @@
-// path: lib/dashboard.ts (or wherever your dashboard queries live)
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { OrderStatus } from "@prisma/client";

@@ -7,14 +7,25 @@ type RouteParams = { params: Promise<{ id: string }> };
 
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
   try {
-    // Correct Auth Check
-    const session = await requireAdmin();
-    if (!session) {
-      return NextResponse.json({ error: "Accès interdit" }, { status: 403 });
+    const isAdmin = await requireAdmin();
+
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: "Accès non autorisé" },
+        { status: 401 }
+      );
     }
 
     const { id } = await params;
     const body = await req.json().catch(() => null);
+    
+    if (!body) {
+      return NextResponse.json(
+        { error: "Corps de la requête invalide ou vide" },
+        { status: 400 }
+      );
+    }
+
     const parsed = deliveryRateSchema.safeParse(body);
 
     if (!parsed.success) {
@@ -24,15 +35,13 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Direct Update (Avoids double database hit)
+    // Direct update with Prisma P2025 error handling if record doesn't exist
     const rate = await prisma.deliveryRate.update({
       where: { id },
       data: {
         homePrice: parsed.data.homePrice,
         deskPrice: parsed.data.deskPrice,
-        // Using undefined here tells Prisma to skip updating it if it's not provided,
-        // which completely eliminates the need for the previous 'existing' check.
-        isActive: parsed.data.isActive ?? undefined, 
+        isActive: parsed.data.isActive ?? undefined,
       },
     });
 
@@ -44,12 +53,19 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error: any) {
-    console.error("Error in PATCH delivery rate:", error);
-    
+    console.error("Erreur lors de la mise à jour du tarif de livraison:", error);
+
+    // Prisma error code for Record to update not found
     if (error.code === "P2025") {
-      return NextResponse.json({ error: "Wilaya introuvable" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Tarif de livraison introuvable" },
+        { status: 404 }
+      );
     }
-    
-    return NextResponse.json({ error: "Erreur interne du serveur" }, { status: 500 });
+
+    return NextResponse.json(
+      { error: "Erreur interne du serveur" },
+      { status: 500 }
+    );
   }
 }

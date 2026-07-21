@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   Package,
   ShoppingBag,
   Star,
   Truck,
-  Settings,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -17,7 +18,7 @@ export type AdminSection =
   | "products"
   | "orders"
   | "reviews"
-  | "deliveryRates"
+  | "deliveryRates";
 
 interface AdminSidebarProps {
   active: AdminSection;
@@ -33,18 +34,27 @@ const items: { id: AdminSection; label: string; icon: typeof LayoutDashboard }[]
   { id: "deliveryRates", label: "Livraison", icon: Truck },
 ];
 
-// ==================== DESKTOP SIDEBAR ====================
 export function AdminSidebar({ active, onChange, onSignOut }: AdminSidebarProps) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    if (onSignOut) {
+      onSignOut();
+      return;
+    }
+    
+    await signOut({ callbackUrl: "/login" });
+  };
+
   return (
-    <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-powder/30 bg-white/80 backdrop-blur-sm lg:flex">
-      {/* Logo - Like Navbar */}
-      <div className=" p-4 items-center border-b border-powder/30 px-6">
+    <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-powder/30 bg-[#fffdf9] backdrop-blur-sm lg:flex">
+      {/* Logo */}
+      <div className="p-4 px-6 border-b border-powder/30">
         <Link href="/admin" className="font-display text-sm uppercase tracking-[0.15em] text-navy sm:text-lg">
           SKN Studio
         </Link>
-        <p className="text-xs text-ink/50 py-2" >Tableau de bord</p>
+        <p className="text-xs text-ink/50 py-1">Tableau de bord</p>
       </div>
-
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
@@ -59,7 +69,7 @@ export function AdminSidebar({ active, onChange, onSignOut }: AdminSidebarProps)
               className={cn(
                 "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 font-sans text-sm font-medium transition-all",
                 isActive
-                  ? "bg-navy/90 text-white shadow-sm"
+                  ? "bg-navy/90 text-white shadow-xs"
                   : "text-ink/60 hover:bg-powder/10 hover:text-navy"
               )}
             >
@@ -71,18 +81,16 @@ export function AdminSidebar({ active, onChange, onSignOut }: AdminSidebarProps)
       </nav>
 
       {/* Sign Out */}
-      {onSignOut ? (
-        <div className="border-t border-powder/30 p-3">
-          <button
-            type="button"
-            onClick={onSignOut}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 font-sans text-sm font-medium text-ink/40 transition-all hover:bg-red-50 hover:text-red-500"
-          >
-            <LogOut size={18} strokeWidth={1.5} />
-            Déconnexion
-          </button>
-        </div>
-      ) : null}
+      <div className="border-t border-powder/30 p-3">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 font-sans text-sm font-medium text-ink/40 transition-all hover:bg-rose-50 hover:text-rose-500"
+        >
+          <LogOut size={18} strokeWidth={1.5} />
+          Déconnexion
+        </button>
+      </div>
     </aside>
   );
 }
@@ -96,8 +104,21 @@ interface MobileBottomBarProps {
 }
 
 export function AdminMobileBottomBar({ active, onChange, onSignOut }: MobileBottomBarProps) {
+  const router = useRouter();
+
   const bottomItems = items.slice(0, 4);
   const extraItems = items.slice(4);
+
+  const handleLogout = async () => {
+    if (onSignOut) {
+      onSignOut();
+      return;
+    }
+    
+    await signOut({ redirect: false });
+    router.push("/login");
+    router.refresh();
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 flex h-16 items-center justify-around border-t border-powder/30 bg-white/95 backdrop-blur-sm lg:hidden">
@@ -128,9 +149,7 @@ export function AdminMobileBottomBar({ active, onChange, onSignOut }: MobileBott
           type="button"
           onClick={() => {
             const dropdown = document.getElementById("admin-more-dropdown");
-            if (dropdown) {
-              dropdown.classList.toggle("hidden");
-            }
+            if (dropdown) dropdown.classList.toggle("hidden");
           }}
           className={cn(
             "flex flex-col items-center gap-0.5 p-2 transition-all",
@@ -161,7 +180,7 @@ export function AdminMobileBottomBar({ active, onChange, onSignOut }: MobileBott
                 className={cn(
                   "flex w-full items-center gap-3 rounded-lg px-3 py-2 font-sans text-sm font-medium transition-all",
                   isActive
-                    ? "bg-navy text-white shadow-sm"
+                    ? "bg-navy text-white shadow-xs"
                     : "text-ink/60 hover:bg-powder/10 hover:text-navy"
                 )}
               >
@@ -170,19 +189,16 @@ export function AdminMobileBottomBar({ active, onChange, onSignOut }: MobileBott
               </button>
             );
           })}
-          {onSignOut && (
-            <>
-              <div className="my-1 border-t border-powder/30" />
-              <button
-                type="button"
-                onClick={onSignOut}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 font-sans text-sm font-medium text-red-400 transition-all hover:bg-red-50"
-              >
-                <LogOut size={16} strokeWidth={1.5} />
-                Déconnexion
-              </button>
-            </>
-          )}
+          
+          <div className="my-1 border-t border-powder/30" />
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 font-sans text-sm font-medium text-rose-500 transition-all hover:bg-rose-50"
+          >
+            <LogOut size={16} strokeWidth={1.5} />
+            Déconnexion
+          </button>
         </div>
       </div>
     </div>

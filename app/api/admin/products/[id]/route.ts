@@ -1,4 +1,3 @@
-// path: app/api/admin/products/[id]/route.ts
 import { NextResponse } from "next/server";
 import { ZodError, z } from "zod";
 import { requireAdmin } from "@/lib/admin/admin-auth";
