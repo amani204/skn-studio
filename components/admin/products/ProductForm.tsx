@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -161,6 +160,18 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
       return;
     }
 
+    if (description.trim().length < 10) {
+      setError("La description doit contenir au moins 10 caractères.");
+      setLoading(false);
+      return;
+    }
+
+    if (oldPrice && price && parseFloat(oldPrice) <= parseFloat(price)) {
+      setError("L'ancien prix doit être supérieur au prix actuel.");
+      setLoading(false);
+      return;
+    }
+
     const payload = {
       name,
       description,
@@ -266,6 +277,13 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
                 placeholder="Description détaillée du produit..."
                 className="w-full px-4 py-2.5 rounded-lg border border-powder/60 bg-white/50 text-sm text-ink placeholder:text-ink/30 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all resize-y shadow-xs"
               />
+              <p
+                className={`text-xs mt-1 ${
+                  description.trim().length < 10 ? "text-rose-500" : "text-ink/40"
+                }`}
+              >
+                {description.trim().length}/10 caractères minimum
+              </p>
             </div>
 
             {/* Prices & Stock Grid */}
@@ -299,6 +317,16 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
                   placeholder="3200"
                   className="w-full px-4 py-2.5 rounded-lg border border-powder/60 bg-white/50  font-medium  text-sm text-ink placeholder:text-ink/30 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all shadow-xs"
                 />
+                <p
+                  className={`text-xs mt-1 ${
+                    oldPrice && price && parseFloat(oldPrice) <= parseFloat(price)
+                      ? "text-rose-500"
+                      : "text-ink/40"
+                  }`}
+                >
+                  Doit être supérieur au prix actuel
+                  
+                </p>
               </div>
 
               <div>

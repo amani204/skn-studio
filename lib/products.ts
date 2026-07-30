@@ -104,6 +104,27 @@ export async function getShopData() {
   };
 }
 
+// ==================== GET FEATURED PRODUCTS (homepage "Nos Icônes") ====================
+
+/**
+ * Products the admin marked with isFeatured=true (max 4, enforced in the
+ * admin dashboard's product service). `take: limit` here is just a safety
+ * net in case that invariant is ever violated directly in the DB.
+ */
+export async function getFeaturedProducts(limit = 4): Promise<ShopProduct[]> {
+  const products = await prisma.product.findMany({
+    where: { isFeatured: true, isPublished: true },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    include: {
+      images: { orderBy: { order: "asc" } },
+      category: true,
+    },
+  });
+
+  return products.map(toShopProduct);
+}
+
 // ==================== GET PRODUCT DETAIL ====================
 
 export async function getProductDetail(slug: string): Promise<ProductDetailReturn | null> {

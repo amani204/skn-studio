@@ -91,7 +91,7 @@ export default function ReviewsSection({ productId }: ReviewSectionProps) {
 
   // ==================== RENDER ====================
   return (
-    <section className="border-t border-powder/30 pt-20">
+    <section className="mt-20 border-t border-powder/30 pt-20">
       {/* Header */}
       <div className="text-center">
         <span className="inline-block text-xs font-medium uppercase tracking-[0.3em] text-blue">

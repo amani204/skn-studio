@@ -20,14 +20,14 @@ const PILLARS = [
   {
     id: "process",
     label: "Processus",
-    image: "/formula.jpg",
+    image: "/skn.png",
     description:
       "Chaque formule est développée avec des dermatologues et testée sur de vraies peaux, pas seulement en laboratoire, avant d'arriver dans nos rayons.",
   },
   {
     id: "promise",
     label: "Promesse",
-    image: "/about3.webp",
+    image: "/formula.jpg",
     description:
       "Si cela ne fonctionne pas pour votre peau, nous vous remboursons. Sans formulaires, sans conditions — c'est la garantie SKN Studio.",
   },
@@ -70,7 +70,7 @@ function PillarCard({ pillar }: { pillar: (typeof PILLARS)[number] }) {
       </div>
 
       {/* Hover overlay with the description */}
-      <div ref={overlayRef} className="absolute inset-0 flex items-end bg-cream/80 p-6 opacity-0">
+      <div ref={overlayRef} className="absolute inset-0 flex items-end bg-cream/90 p-6 opacity-0">
         <p ref={descRef} className="text-sm leading-relaxed text-ink/90">
           {pillar.description}
         </p>

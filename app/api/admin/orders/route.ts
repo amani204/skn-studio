@@ -1,55 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/admin-auth";
-import { orderStatusSchema } from "@/lib/validation/admin";
+import { getAllOrders } from "@/lib/admin/order";
 
-type RouteParams = { params: Promise<{ id: string }> };
-
-export async function PATCH(req: NextRequest, { params }: RouteParams) {
+// list all orders with items + shipping address
+export async function GET() {
   const session = await requireAdmin();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const { id } = await params;
-  const body = await req.json().catch(() => null);
-  const parsed = orderStatusSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json({ error: "Statut invalide" }, { status: 400 });
+  if (!session) {
+    return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
 
-  const newStatus = parsed.data.status;
-
-  const existingOrder = await prisma.order.findUnique({
-    where: { id },
-    include: { items: true },
-  });
-
-  if (!existingOrder) {
-    return NextResponse.json({ error: "Commande introuvable" }, { status: 404 });
+  try {
+    const orders = await getAllOrders();
+    return NextResponse.json({ orders }, { status: 200 });
+  } catch (error) {
+    console.error("GET /api/admin/orders error:", error);
+    return NextResponse.json(
+      { error: "Impossible de récupérer les commandes." },
+      { status: 500 }
+    );
   }
-
-  const isBeingCancelled = newStatus === "CANCELLED" && existingOrder.status !== "CANCELLED";
-
-  const order = await prisma.$transaction(async (tx) => {
-    // Restore stock when cancelling — otherwise every cancellation
-    // permanently shrinks inventory for no reason.
-    if (isBeingCancelled) {
-      await Promise.all(
-        existingOrder.items
-          .filter((item) => item.productId) // skip items whose product was later deleted
-          .map((item) =>
-            tx.product.update({
-              where: { id: item.productId! },
-              data: { stock: { increment: item.quantity } },
-            })
-          )
-      );
-    }
-
-    return tx.order.update({
-      where: { id },
-      data: { status: newStatus },
-    });
-  });
-
-  return NextResponse.json({ success: true, order });
 }

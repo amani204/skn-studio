@@ -43,7 +43,7 @@ const productBaseSchema = z.object({
     .max(8, "8 images maximum par produit."),
 });
 
-// POST /api/admin/products/new
+
 export const createProductSchema = productBaseSchema.refine(
   (data) => !data.oldPrice || data.oldPrice > data.price,
   {
@@ -52,7 +52,6 @@ export const createProductSchema = productBaseSchema.refine(
   }
 );
 
-// PUT /api/admin/products/[id]
 export const updateProductSchema = productBaseSchema
   .partial()
   .extend({

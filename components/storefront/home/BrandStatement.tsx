@@ -76,6 +76,7 @@ export default function BrandStatement() {
 
   return (
     <section
+      id="hist"
       ref={sectionRef}
       className="relative flex h-[80vh] flex-col items-center justify-center overflow-hidden"
     >
@@ -83,7 +84,7 @@ export default function BrandStatement() {
       <h2
         ref={bgTextRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 flex select-none items-center justify-center font-display text-6xl font-medium italic uppercase leading-none text-navy/[0.04]"
+        className="pointer-events-none absolute inset-0 flex select-none items-center justify-center font-display text-6xl font-medium italic uppercase leading-none text-navy/4"
         style={{ fontSize: "clamp(4rem, 18vw, 16rem)" }}
       >
         SKN Studio
@@ -113,7 +114,7 @@ export default function BrandStatement() {
         <div className="flex flex-col items-center justify-center gap-12 md:flex-row">
           <p
             data-animate
-            className="max-w-[280px] text-left text-sm leading-relaxed text-navy/70"
+            className="max-w-70 text-left text-sm leading-relaxed text-navy/70"
           >
             Nous croyons que la peau est une toile de l'histoire de chacun. 
             Notre approche traite chaque couche avec la révérence d'une œuvre d'art.
@@ -124,7 +125,7 @@ export default function BrandStatement() {
           />
           <p
             data-animate
-            className="max-w-[280px] text-left text-sm leading-relaxed text-navy/70"
+            className="max-w-70 text-left text-sm leading-relaxed text-navy/70"
           >
             Formulé en petites séries avec des botaniques pressées à froid et 
             des actifs bio-identiques pour une résonance cellulaire inégalée.

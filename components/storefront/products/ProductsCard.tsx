@@ -12,7 +12,7 @@ type ProductCardProps = {
   price: number;
   oldPrice?: number | null;
   imageUrl?: string;
-  stock: number; // ← added
+  stock: number; 
 };
 
 export default function ProductCard({
@@ -63,12 +63,12 @@ export default function ProductCard({
           )}
 
           {oldPrice && !isSoldOut && (
-            <span className="absolute left-3 top-3 z-10 rounded-lg bg-navy/10 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-navy">
+            <span className="absolute left-3 top-3 z-10 rounded-lg bg-green-400/10 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-green-300">
               Promo
             </span>
           )}
           {isSoldOut && (
-            <span className="absolute left-3 top-3 z-10 rounded-lg bg-ink/70 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-white">
+            <span className="absolute left-3 top-3 z-10 rounded-lg bg-red/70 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-white">
               Rupture de stock
             </span>
           )}

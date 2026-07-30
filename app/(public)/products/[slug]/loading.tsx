@@ -55,32 +55,7 @@ export default function ProductDetailLoading() {
           <div className="mx-auto h-4 w-16 animate-pulse rounded bg-powder/30" />
           <div className="mx-auto mt-3 h-8 w-48 animate-pulse rounded-lg bg-powder/30 sm:h-10" />
         </div>
-
-        <div className="mt-8 space-y-4">
-          {[1, 2].map((i) => (
-            <div key={i} className="rounded-xl border border-powder/30 bg-white/30 p-6 animate-pulse">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full bg-powder/20" />
-                  <div>
-                    <div className="h-4 w-24 rounded bg-powder/20" />
-                    <div className="mt-1 flex gap-1">
-                      {[1, 2, 3, 4, 5].map((j) => (
-                        <div key={j} className="h-4 w-4 rounded bg-powder/20" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="h-3 w-20 rounded bg-powder/20" />
-              </div>
-              <div className="mt-3 space-y-2">
-                <div className="h-3 w-full rounded bg-powder/20" />
-                <div className="h-3 w-3/4 rounded bg-powder/20" />
-              </div>
-            </div>
-          ))}
-        </div>
-
+        
         <div className="mt-12 rounded-2xl border border-powder/30 bg-white/30 p-6 sm:p-8">
           <div className="text-center">
             <div className="mx-auto h-4 w-48 animate-pulse rounded bg-powder/30" />
@@ -106,6 +81,33 @@ export default function ProductDetailLoading() {
             <div className="h-12 w-full animate-pulse rounded-lg bg-powder/30" />
           </div>
         </div>
+        
+        <div className="mt-8 space-y-4">
+          {[1, 2].map((i) => (
+            <div key={i} className="rounded-xl border border-powder/30 bg-white/30 p-6 animate-pulse">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-full bg-powder/20" />
+                  <div>
+                    <div className="h-4 w-24 rounded bg-powder/20" />
+                    <div className="mt-1 flex gap-1">
+                      {[1, 2, 3, 4, 5].map((j) => (
+                        <div key={j} className="h-4 w-4 rounded bg-powder/20" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="h-3 w-20 rounded bg-powder/20" />
+              </div>
+              <div className="mt-3 space-y-2">
+                <div className="h-3 w-full rounded bg-powder/20" />
+                <div className="h-3 w-3/4 rounded bg-powder/20" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        
       </div>
 
       {/* You May Also Like Skeleton */}
