@@ -10,7 +10,6 @@ export const dynamic = "force-dynamic";
 
 const DZD = new Intl.NumberFormat("fr-DZ", { maximumFractionDigits: 0 });
 
-/** Converts a local Algerian number (0X XX XX XX XX) into wa.me's international format. */
 function toWhatsAppNumber(phone: string) {
   const digits = phone.replace(/\D/g, "");
   const local = digits.startsWith("0") ? digits.slice(1) : digits;
@@ -20,12 +19,14 @@ function toWhatsAppNumber(phone: string) {
 export default async function AdminOrderDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>  // ← Promise
 }) {
+  const { id } = await params      // ← await
+
   const session = await requireAdmin();
   if (!session) redirect("/admin/portal-97x-login");
 
-  const order = await getOrderById(params.id);
+  const order = await getOrderById(id);  // ← use id directly
   if (!order) notFound();
 
   const address = order.shippingAddress;
@@ -156,14 +157,18 @@ export default async function AdminOrderDetailPage({
                   <p>
                     {address?.wilaya} ({address?.wilayaCode}) — {address?.commune}
                   </p>
-                  {address?.address && <p className="text-xs text-ink/50">{address.address}</p>}
+                  {address?.address && (
+                    <p className="text-xs text-ink/50">{address.address}</p>
+                  )}
                 </div>
               </div>
 
               <div className="flex items-center gap-2 text-ink/70">
                 <Truck size={14} strokeWidth={1.5} className="shrink-0" />
                 <span>
-                  {order.deliveryMethod === "HOME" ? "Livraison à domicile" : "Retrait au bureau"}
+                  {order.deliveryMethod === "HOME"
+                    ? "Livraison à domicile"
+                    : "Retrait au bureau"}
                 </span>
               </div>
             </div>
@@ -176,7 +181,9 @@ export default async function AdminOrderDetailPage({
             <span
               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${orderStatusConfig[status].badgeClass}`}
             >
-              <span className={`h-1.5 w-1.5 rounded-full ${orderStatusConfig[status].dotClass}`} />
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${orderStatusConfig[status].dotClass}`}
+              />
               {orderStatusConfig[status].label}
             </span>
           </div>

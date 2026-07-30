@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/admin-auth";
 import { uploadProductImage } from "@/lib/admin/upload";
 
-export async function POST(req: NextRequest) {
-  try {
-    const unauthorized = await requireAdmin();
-    if (unauthorized) return unauthorized;
-
+export async function POST(req: Request) {
+  const session = await requireAdmin()
+  if (!session) {
+    return NextResponse.json({ error: 'Non autorisé.' }, { status: 401 })
+  }
     const formData = await req.formData();
     const file = formData.get("file");
 
@@ -21,11 +21,4 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ url: result.url }, { status: 200 });
-  } catch (error) {
-    console.error("Upload error:", error);
-    return NextResponse.json(
-      { error: "Erreur lors de l'upload" },
-      { status: 500 }
-    );
-  }
-}
+  } 

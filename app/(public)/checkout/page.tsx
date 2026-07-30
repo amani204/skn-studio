@@ -8,5 +8,5 @@ export const metadata = {
 export default async function CheckoutPage() {
   const deliveryRates = await getDeliveryRates();
 
-  return <CheckoutForm deliveryRates={deliveryRates} items={[]} />;
+  return <CheckoutForm deliveryRates={deliveryRates}  />;
 }

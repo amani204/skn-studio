@@ -7,16 +7,18 @@ import { AppError } from "@/lib/errors";
 
 const paramsSchema = z.object({ id: z.string().cuid("Identifiant de commande invalide.") });
 
-//  update order status
-// (No DELETE by design: orders are never hard-deleted, only moved to
-// CANCELLED, to preserve revenue reports and order history.)
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }  // ← Promise
+) {
   const session = await requireAdmin();
   if (!session) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
 
-  const parsedParams = paramsSchema.safeParse(params);
+  const { id } = await params  // ← await
+
+  const parsedParams = paramsSchema.safeParse({ id })
   if (!parsedParams.success) {
     return NextResponse.json({ error: "Identifiant de commande invalide." }, { status: 400 });
   }
@@ -42,7 +44,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     if (error instanceof AppError) {
       return NextResponse.json({ error: error.message }, { status: error.statusCode });
     }
-    console.error(`PATCH /api/admin/orders/${params.id} error:`, error);
+    console.error(`PATCH /api/admin/orders/${id} error:`, error);
     return NextResponse.json({ error: "Impossible de mettre à jour la commande." }, { status: 500 });
   }
 }
