@@ -69,9 +69,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
               </div>
             )}
             {product.oldPrice && (
-              <span className="absolute left-4 top-4 rounded-full bg-navy/10 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-navy backdrop-blur-sm">
-                Promo
-              </span>
+            <span className="absolute left-3 top-3 z-10 rounded-lg bg-green-400/10 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-green-300">
+              Promo
+            </span>
             )}
           </div>
         </div>

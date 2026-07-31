@@ -88,7 +88,7 @@ export default function CartSlider() {
               </div>
               <p className="mt-4 text-sm text-ink/40">Votre panier est vide</p>
               <Link
-                href="/shop"
+                href="/products"
                 className="mt-6 group relative inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-navy/60 transition-colors hover:text-navy sm:text-sm"
               >
                 Continuer vos achats

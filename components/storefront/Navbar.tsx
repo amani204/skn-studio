@@ -146,7 +146,7 @@ export default function Navbar() {
         <nav
           ref={navRef}
           className="grid w-page max-w-6xl grid-cols-2 items-center rounded-lg border border-navy/10 px-4 py-2 backdrop-blur-md sm:px-8 sm:py-[0.9rem] md:grid-cols-3"
-          style={{ backgroundColor: "rgba(246, 244, 240, 0.45)" }}
+          style={{ backgroundColor: "#f6f4f0" }}
         >
           <div ref={logoRef} className="justify-self-start">
             <Link href="/" className="font-display text-sm uppercase tracking-[0.15em] text-navy sm:text-lg">
@@ -169,7 +169,8 @@ export default function Navbar() {
           </div>
 
           <div ref={iconsRef} className="flex items-center justify-end gap-3 sm:gap-5">
-          <SearchBar />
+          <div className="hidden sm:block"> <SearchBar /> </div>
+         
 
             <button
               onClick={toggleCart}

@@ -163,7 +163,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
       {/* Voir tout - Underline Link */}
       <div className="mt-10 text-center sm:mt-12">
         <Link
-          href="/shop"
+          href="/products"
           className="group relative inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-navy/60 transition-colors hover:text-navy sm:text-sm"
         >
           <span>Voir toute la boutique</span>

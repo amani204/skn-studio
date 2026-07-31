@@ -36,9 +36,9 @@ export function ProductCard({ id, slug, name, price, oldPrice, imageUrl }: Produ
           </div>
         )}
         {oldPrice && (
-          <span className="absolute left-2 top-2 rounded-full bg-navy/10 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-navy">
-            Promo
-          </span>
+           <span className="absolute left-3 top-3 z-10 rounded-lg bg-green-400/10 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-green-300">
+              Promo
+            </span>
         )}
       </div>
 

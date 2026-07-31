@@ -75,11 +75,11 @@ export default function Hero() {
   }, []);
 
   return (
-    <section id="home" ref={sectionRef} className="relative w-full pb-16 pt-0 sm:pb-20">
+    <section id="home" ref={sectionRef} className="relative w-full pb-8 pt-0 sm:pb-16">
       {/* Image Container - Responsive height tuning */}
       <div
         ref={imageWrapRef}
-        className="relative h-[65vh] min-h-[480px] w-full overflow-hidden sm:h-[90vh]"
+        className="relative h-[65vh] min-h-120 w-full overflow-hidden sm:h-[90vh]"
       >
         <Image
           src="/Hero.png"
@@ -146,7 +146,7 @@ export default function Hero() {
         </div>
 
         {/* Product Spotlight Card - Hidden on very small screens or responsive positioning */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 sm:bottom-15 sm:right-8 sm:left-auto sm:translate-x-0">
+        <div className="hidden sm:block absolute bottom-12 right-8 z-20">
           <div
             ref={cardRef}
             className="w-[calc(100vw-3rem)] max-w-xs rounded-lg bg-white/10 backdrop-blur-md border border-white/20 p-4 shadow-xl sm:w-64 sm:p-5"

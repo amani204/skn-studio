@@ -23,7 +23,7 @@ export default function ShopPageClient({ products, categories }: ShopPageClientP
   const headerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // ==================== FILTER PRODUCTS ====================
+  // FILTER PRODUCTS =
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
       const matchesCategory = activeCategory === "all" || p.categorySlug === activeCategory;
@@ -44,12 +44,12 @@ export default function ShopPageClient({ products, categories }: ShopPageClientP
     return filteredProducts.slice(start, start + PAGE_SIZE);
   }, [filteredProducts, currentPage]);
 
-  // ==================== RESET PAGE ON FILTER CHANGE ====================
+  // RESET PAGE ON FILTER CHANGE 
   useEffect(() => {
     setCurrentPage(1);
   }, [activeCategory, minPrice, maxPrice]);
 
-  // ==================== HEADER ANIMATION ====================
+ 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -61,7 +61,7 @@ export default function ShopPageClient({ products, categories }: ShopPageClientP
     return () => ctx.revert();
   }, []);
 
-  // ==================== GRID ANIMATION ====================
+  
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -73,26 +73,26 @@ export default function ShopPageClient({ products, categories }: ShopPageClientP
     return () => ctx.revert();
   }, [activeCategory, minPrice, maxPrice, currentPage]);
 
-  // ==================== HANDLE PAGE CHANGE ====================
+  // HANDLE PAGE CHANGE  
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // ==================== HANDLE FILTER RESET ====================
+  // HANDLE FILTER RESET  
   const handleReset = () => {
     setActiveCategory("all");
     setMinPrice("");
     setMaxPrice("");
   };
 
-  // ==================== HANDLE PRICE CHANGE ====================
+  // HANDLE PRICE CHANGE  
   const handlePriceChange = (min: string, max: string) => {
     setMinPrice(min);
     setMaxPrice(max);
   };
 
-  // ==================== RENDER ====================
+  // RENDER  
   return (
     <main className="mx-auto max-w-7xl px-4 pb-24 pt-32 sm:px-8 sm:pt-40">
       {/* Header */}
@@ -122,7 +122,7 @@ export default function ShopPageClient({ products, categories }: ShopPageClientP
         onReset={handleReset}
       />
 
-      {/* Products Grid - 2 columns on mobile */}
+      {/* Products Grid */}
       <div ref={gridRef} className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4">
         {pageProducts.length === 0 ? (
           <div className="col-span-full py-20 text-center">

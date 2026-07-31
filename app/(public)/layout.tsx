@@ -1,4 +1,3 @@
-// path: app/(public)/layout.tsx
 import React from "react";
 import Navbar from "@/components/storefront/Navbar";
 import CartSlider from "@/components/storefront/CartSlider";
