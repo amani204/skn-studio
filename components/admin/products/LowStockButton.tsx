@@ -1,4 +1,3 @@
-// path: components/admin/products/LowStockButton.tsx
 "use client";
 
 import Link from "next/link";

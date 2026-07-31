@@ -66,7 +66,7 @@ export function AdminNotifications() {
       >
         <Bell className="w-5 h-5" strokeWidth={1.75} />
         {alertCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white shadow-xs animate-pulse">
+          <span className="absolute bottom-6 left-5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white shadow-xs animate-pulse">
             {alertCount}
           </span>
         )}
@@ -74,7 +74,7 @@ export function AdminNotifications() {
 
       {/* Popover Dropdown Panel */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 sm:w-96 rounded-lg border border-powder/80 bg-white/95 backdrop-blur-md p-2 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="absolute right-0 mt-3 w-80 sm:w-96 rounded-lg border border-cream/80 bg-white/95 backdrop-blur-md p-2 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
           {/* Header */}
           <div className="px-3 py-2.5 border-b border-powder/50 flex justify-between items-center">
             <span className="text-xs font-medium uppercase tracking-wider text-ink/70">

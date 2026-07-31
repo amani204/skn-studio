@@ -1,5 +1,4 @@
 
-import React from "react";
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -7,7 +6,6 @@ import {
   DollarSign, 
   ShoppingCart, 
   Clock, 
-  Package 
 } from "lucide-react";
 import { 
   getDashboardStats, 

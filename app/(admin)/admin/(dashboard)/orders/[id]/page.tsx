@@ -19,35 +19,36 @@ function toWhatsAppNumber(phone: string) {
 export default async function AdminOrderDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>  // ← Promise
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = await params      // ← await
+  const { id } = await params;
 
   const session = await requireAdmin();
   if (!session) redirect("/admin/portal-97x-login");
 
-  const order = await getOrderById(id);  // ← use id directly
+  const order = await getOrderById(id);
   if (!order) notFound();
 
   const address = order.shippingAddress;
   const status = order.status as OrderStatusValue;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="p-6 sm:p-10 max-w-7xl mx-auto space-y-8">
+      {/* Header  */}
+      <div className="border-b border-powder/40 pb-5 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
+          {/* Back link  */}
           <Link
             href="/admin/orders"
-            className="mb-2 inline-flex items-center gap-1 text-xs font-medium text-ink/50 hover:text-navy"
+            className="inline-flex items-center gap-1 text-xs font-medium text-ink/50 hover:text-navy transition-colors"
           >
             <ArrowLeft size={14} strokeWidth={1.5} />
             Retour aux commandes
           </Link>
-          <h1 className="font-display text-xl text-navy sm:text-2xl">
+          <h1 className="text-3xl font-display tracking-tight text-ink sm:text-4xl mt-1">
             Commande #{order.orderNumber.slice(0, 8).toUpperCase()}
           </h1>
-          <p className="text-sm text-ink/50">
+          <p className="mt-1 text-sm text-ink/60 font-body">
             Passée le{" "}
             {new Date(order.createdAt).toLocaleDateString("fr-DZ", {
               day: "2-digit",
@@ -59,14 +60,21 @@ export default async function AdminOrderDetailPage({
           </p>
         </div>
 
-        <StatusSelect orderId={order.id} status={status} className="self-start sm:self-auto" />
+        {/* Status select  */}
+        <StatusSelect
+          orderId={order.id}
+          status={status}
+          className="self-start sm:self-auto"
+        />
       </div>
 
+      {/* Main grid */}
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Items + totals */}
-        <div className="space-y-4 lg:col-span-2">
-          <div className="rounded-xl border border-powder/30 bg-white p-5">
-            <h2 className="mb-4 font-display text-sm uppercase tracking-wide text-ink/50">
+        {/* Left column: Items + notes */}
+        <div className="space-y-6 lg:col-span-2">
+          {/* Items card */}
+          <div className="rounded-lg border border-powder/40 bg-white p-5">
+            <h2 className="mb-4 font-display text-sm uppercase tracking-widest text-ink/50">
               Articles ({order.items.length})
             </h2>
             <ul className="divide-y divide-powder/20">
@@ -111,9 +119,10 @@ export default async function AdminOrderDetailPage({
             </div>
           </div>
 
+          {/* Notes card */}
           {order.notes && (
-            <div className="rounded-xl border border-powder/30 bg-white p-5">
-              <h2 className="mb-2 font-display text-sm uppercase tracking-wide text-ink/50">
+            <div className="rounded-lg border border-powder/40 bg-white p-5">
+              <h2 className="mb-2 font-display text-sm uppercase tracking-widest text-ink/50">
                 Notes du client
               </h2>
               <p className="text-sm text-ink/70">{order.notes}</p>
@@ -121,10 +130,11 @@ export default async function AdminOrderDetailPage({
           )}
         </div>
 
-        {/* Customer / delivery / status */}
-        <div className="space-y-4">
-          <div className="rounded-xl border border-powder/30 bg-white p-5">
-            <h2 className="mb-4 font-display text-sm uppercase tracking-wide text-ink/50">
+        {/* Right column: Customer & status */}
+        <div className="space-y-6">
+          {/* Customer card */}
+          <div className="rounded-lg border border-powder/40 bg-white p-5">
+            <h2 className="mb-4 font-display text-sm uppercase tracking-widest text-ink/50">
               Client
             </h2>
             <div className="space-y-3 text-sm">
@@ -134,7 +144,7 @@ export default async function AdminOrderDetailPage({
                 <div className="flex flex-wrap gap-2">
                   <a
                     href={`tel:${address.phone}`}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-powder/30 px-3 py-1.5 text-xs font-medium text-ink/70 hover:border-navy/30 hover:text-navy"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-powder/40 px-3 py-1.5 text-xs font-medium text-ink/70 hover:border-navy/30 hover:text-navy transition-colors"
                   >
                     <Phone size={13} strokeWidth={1.5} />
                     {address.phone}
@@ -143,7 +153,7 @@ export default async function AdminOrderDetailPage({
                     href={`https://wa.me/${toWhatsAppNumber(address.phone)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-100"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-100 transition-colors"
                   >
                     <MessageCircle size={13} strokeWidth={1.5} />
                     WhatsApp
@@ -174,8 +184,9 @@ export default async function AdminOrderDetailPage({
             </div>
           </div>
 
-          <div className="rounded-xl border border-powder/30 bg-white p-5">
-            <h2 className="mb-3 font-display text-sm uppercase tracking-wide text-ink/50">
+          {/* Status card */}
+          <div className="rounded-lg border border-powder/40 bg-white p-5">
+            <h2 className="mb-3 font-display text-sm uppercase tracking-widest text-ink/50">
               Statut actuel
             </h2>
             <span

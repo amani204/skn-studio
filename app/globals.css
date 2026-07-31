@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-/* ------------------------------------------------------------------ */
-/* Design tokens — Tailwind v4 reads @theme and auto-generates         */
-/* utilities: bg-cream, text-navy, border-powder, font-display, etc.   */
-/* ------------------------------------------------------------------ */
 @theme {
   /* Palette */
   --color-cream: #FBF9F4;   /* base background */
@@ -13,16 +9,13 @@
   --color-ink: #181818;     /* body text */
 
   /* Typography — CSS vars below are populated by next/font in layout.tsx */
-  --font-display: var(--font-playfair), "Playfair Display SC", serif;
+  --font-display: var(--font-display), "Montserrat", sans-serif;
   --font-body: var(--font-inter), "Inter", sans-serif;
 
   /* Layout helpers */
   --container-page: 80%;
 }
 
-/* ------------------------------------------------------------------ */
-/* Base                                                                 */
-/* ------------------------------------------------------------------ */
 html {
   scroll-behavior: smooth;
 }

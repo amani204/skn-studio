@@ -64,10 +64,6 @@ export default function DashboardLayout({
       <div className="lg:pl-64 pb-16 lg:pb-0">
         {/* Topbar */}
         <AdminTopbar
-          title="Tableau de bord"
-          subtitle="Vue d'ensemble de votre boutique"
-          adminName="Admin"
-          adminEmail="admin@sknstudio.dz"
         />
 
         {/* Page Content Container */}

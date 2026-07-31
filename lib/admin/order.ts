@@ -3,32 +3,66 @@ import { prisma } from "@/lib/prisma";
 import { AppError } from "@/lib/errors";
 import type { OrderStatus } from "@prisma/client";
 
-export type OrderWithDetails = NonNullable<Awaited<ReturnType<typeof getOrderById>>>;
+// ==================== SERIALIZATION ====================
+// Prisma's Decimal fields are class instances, not plain objects. Next.js
+// refuses to pass them from a Server Component into a Client Component
+// ("Only plain objects can be passed..."). We convert every Decimal to a
+// plain `number` here, once, so every caller of these functions already
+// gets client-safe data — no need to re-serialize in every page.
+
+type RawOrder = NonNullable<Awaited<ReturnType<typeof fetchOrderById>>>;
+
+function serializeOrder(order: RawOrder) {
+  return {
+    ...order,
+    subtotal: Number(order.subtotal),
+    shippingCost: Number(order.shippingCost),
+    total: Number(order.total),
+    items: order.items.map((item) => ({
+      ...item,
+      price: Number(item.price),
+    })),
+  };
+}
+
+export type OrderWithDetails = ReturnType<typeof serializeOrder>;
+
+// ==================== QUERIES ====================
+
+const orderInclude = {
+  items: {
+    include: {
+      product: {
+        select: {
+          id: true,
+          slug: true,
+          images: { take: 1, orderBy: { order: "asc" as const } },
+        },
+      },
+    },
+  },
+  shippingAddress: true,
+} as const;
+
+async function fetchOrderById(id: string) {
+  return prisma.order.findUnique({
+    where: { id },
+    include: orderInclude,
+  });
+}
 
 /**
  * Fetches all orders with everything the dashboard table/detail view needs:
  * line items (with the product's current image, in case the product still
- * exists) and the shipping address.
+ * exists) and the shipping address. Decimal fields are pre-serialized.
  */
-export async function getAllOrders() {
+export async function getAllOrders(): Promise<OrderWithDetails[]> {
   try {
-    return await prisma.order.findMany({
+    const orders = await prisma.order.findMany({
       orderBy: { createdAt: "desc" },
-      include: {
-        items: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                slug: true,
-                images: { take: 1, orderBy: { order: "asc" } },
-              },
-            },
-          },
-        },
-        shippingAddress: true,
-      },
+      include: orderInclude,
     });
+    return orders.map(serializeOrder);
   } catch (error) {
     console.error("Database error in getAllOrders:", error);
     throw new Error("Impossible de récupérer les commandes.");
@@ -36,28 +70,13 @@ export async function getAllOrders() {
 }
 
 /**
- * Fetches a single order by id — used to check existence before updating
- * and to return the fresh, fully-populated order after the update.
+ * Fetches a single order by id, pre-serialized for direct use in Client
+ * Components (e.g. passed straight into <StatusSelect />).
  */
-export async function getOrderById(id: string) {
+export async function getOrderById(id: string): Promise<OrderWithDetails | null> {
   try {
-    return await prisma.order.findUnique({
-      where: { id },
-      include: {
-        items: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                slug: true,
-                images: { take: 1, orderBy: { order: "asc" } },
-              },
-            },
-          },
-        },
-        shippingAddress: true,
-      },
-    });
+    const order = await fetchOrderById(id);
+    return order ? serializeOrder(order) : null;
   } catch (error) {
     console.error(`Database error in getOrderById for ID ${id}:`, error);
     throw new Error("Impossible de récupérer la commande.");
@@ -69,31 +88,19 @@ export async function getOrderById(id: string) {
  * CANCELLED is the terminal "removed" state, which keeps revenue reports,
  * order history, and customer-support lookups intact.
  */
-export async function updateOrderStatus(id: string, status: OrderStatus) {
+export async function updateOrderStatus(id: string, status: OrderStatus): Promise<OrderWithDetails> {
   const existing = await prisma.order.findUnique({ where: { id }, select: { id: true } });
   if (!existing) {
     throw new AppError("Commande introuvable.", 404, "ORDER_NOT_FOUND");
   }
 
   try {
-    return await prisma.order.update({
+    const order = await prisma.order.update({
       where: { id },
       data: { status },
-      include: {
-        items: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                slug: true,
-                images: { take: 1, orderBy: { order: "asc" } },
-              },
-            },
-          },
-        },
-        shippingAddress: true,
-      },
+      include: orderInclude,
     });
+    return serializeOrder(order);
   } catch (error: any) {
     if (error?.code === "P2025") {
       throw new AppError("Commande introuvable.", 404, "ORDER_NOT_FOUND");

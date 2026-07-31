@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Playfair_Display_SC, Inter } from "next/font/google";
+import { Montserrat, Inter } from "next/font/google";
 import { CartProvider } from "@/context/CartContext";
 import "./globals.css";
 
-const playfair = Playfair_Display_SC({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700"], 
+  variable: "--font-display", 
 });
 
 const inter = Inter({
@@ -26,11 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className={`${playfair.variable} ${inter.variable}`}>
+    <html lang="fr" className={`${montserrat.variable} ${inter.variable}`}>
       <body className="antialiased bg-white text-ink">
-        <CartProvider>
-          {children}
-        </CartProvider>
+        <CartProvider>{children}</CartProvider>
       </body>
     </html>
   );

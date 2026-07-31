@@ -2,7 +2,10 @@ import "server-only";
 import { prisma } from "@/lib/prisma";
 import { OrderStatus } from "@prisma/client";
 
-const REVENUE_STATUSES: OrderStatus[] = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED"];
+// Revenue only counts money actually collected. PENDING/PROCESSING/SHIPPED
+// orders can still be CANCELLED, so counting them here would overstate
+// revenue — a COD order isn't "revenue" until it's DELIVERED.
+const REVENUE_STATUSES: OrderStatus[] = ["DELIVERED"];
 const ACTIVE_STATUSES: OrderStatus[] = ["PENDING", "PROCESSING", "SHIPPED"];
 
 export type DashboardStats = {
