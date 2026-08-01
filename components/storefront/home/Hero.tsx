@@ -80,7 +80,7 @@ export default function Hero() {
       {/* Image Container */}
       <div
         ref={imageWrapRef}
-        className="relative h-[65vh] min-h-120 w-full overflow-hidden sm:h-[90vh]"
+        className="relative h-[90vh] min-h-120 w-full overflow-hidden sm:h-[90vh]"
       >
         {/* Desktop Image (hidden on mobile) */}
         <Image
