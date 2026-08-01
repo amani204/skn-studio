@@ -248,7 +248,7 @@ export function CategoryManager({ categories: initialCategories }: CategoryManag
 
             <div className="mb-4 space-y-2">
               {pendingDelete.otherCategories.length > 0 && (
-                <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-powder/30 p-3 has-[:checked]:border-navy/40 has-[:checked]:bg-navy/5">
+                <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-powder/30 p-3 has-checked:border-navy/40 has-checked:bg-navy/5">
                   <input
                     type="radio"
                     name="delete-mode"
@@ -281,7 +281,7 @@ export function CategoryManager({ categories: initialCategories }: CategoryManag
                 </label>
               )}
 
-              <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-powder/30 p-3 has-[:checked]:border-rose-300 has-[:checked]:bg-rose-50">
+              <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-powder/30 p-3 has-checked:border-rose-300 has-checked:bg-rose-50">
                 <input
                   type="radio"
                   name="delete-mode"

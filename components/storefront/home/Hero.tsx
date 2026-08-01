@@ -14,7 +14,8 @@ export default function Hero() {
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  // ENTRANCE ANIMATION 
+
+  // ENTRANCE ANIMATION
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -59,7 +60,7 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
-  // FLOATING CARD ANIMATION 
+  // FLOATING CARD ANIMATION
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.to(cardRef.current, {
@@ -76,26 +77,33 @@ export default function Hero() {
 
   return (
     <section id="home" ref={sectionRef} className="relative w-full pb-8 pt-0 sm:pb-16">
-      {/* Image Container - Responsive height tuning */}
+      {/* Image Container */}
       <div
         ref={imageWrapRef}
         className="relative h-[65vh] min-h-120 w-full overflow-hidden sm:h-[90vh]"
       >
+        {/* Desktop Image (hidden on mobile) */}
         <Image
           src="/Hero.png"
           alt="SKN Studio soins de la peau"
           fill
           priority
-          /* Anchors image focal point on mobile, centers on desktop */
-          className="object-cover object-[65%_25%] sm:object-center"
+          className="hidden sm:block object-cover object-center"
         />
 
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-black/40 sm:bg-black/30" />
+        {/* Mobile Image (hidden on desktop) */}
+        <Image
+          src="/hero.jpg"
+          alt="SKN Studio soins de la peau"
+          fill
+          priority
+          className="block sm:hidden object-cover object-center"
+        />
 
-        {/* ===== CONTENT OVERLAY ===== */}
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/40 sm:bg-black/30" />
         <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-          {/* Main Title - SKN STUDIO */}
+          {/* Main Title */}
           <h1
             ref={titleRef}
             className="font-display uppercase leading-none tracking-[0.08em] text-white"
@@ -117,17 +125,16 @@ export default function Hero() {
             ref={descriptionRef}
             className="mt-4 max-w-xl text-xs font-light leading-relaxed text-white/70 sm:mt-6 sm:max-w-2xl sm:text-sm"
           >
-            Des essentiels de soin soigneusement sélectionnés — des nettoyants doux 
-            aux sérums nourrissants, en passant par les soins du corps et des 
+            Des essentiels de soin soigneusement sélectionnés — des nettoyants doux
+            aux sérums nourrissants, en passant par les soins du corps et des
             accessoires. Découvrez une beauté propre ancrée dans la simplicité.
           </p>
-          
-        {/* Call To Action Buttons */}
+
+          {/* Call To Action Buttons */}
           <div
             ref={ctaRef}
             className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
           >
-            {/* Primary Action Button */}
             <Link
               href="/products"
               className="group relative flex h-12 w-full min-w-50 items-center justify-center overflow-hidden rounded-lg bg-white px-8 text-xs font-medium uppercase tracking-[0.2em] text-black transition-all duration-300 hover:bg-neutral-200 hover:shadow-lg sm:w-auto"
@@ -135,7 +142,6 @@ export default function Hero() {
               Découvrir la collection
             </Link>
 
-            {/* Secondary Action Button */}
             <Link
               href="#hist"
               className="flex h-12 w-full min-w-40 items-center justify-center rounded-lg border border-white/40 bg-white/5 px-8 text-xs font-medium uppercase tracking-[0.2em] text-white backdrop-blur-sm transition-all duration-300 hover:border-white hover:bg-white/20 sm:w-auto"
@@ -145,7 +151,7 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Product Spotlight Card - Hidden on very small screens or responsive positioning */}
+        {/* Product Spotlight Card */}
         <div className="hidden sm:block absolute bottom-12 right-8 z-20">
           <div
             ref={cardRef}
