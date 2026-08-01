@@ -23,9 +23,6 @@ export default async function NewProductPage() {
 
           <div>
             <div className="flex items-center gap-2.5">
-              <span className="p-1.5 rounded-lg bg-navy/10 text-navy border border-navy/20">
-                <Sparkles className="w-5 h-5" />
-              </span>
               <h1 className="text-3xl font-display tracking-tight text-ink sm:text-4xl">
                 Nouveau Produit
               </h1>

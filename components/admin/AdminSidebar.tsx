@@ -10,6 +10,7 @@ import {
   Star,
   Truck,
   LogOut,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +19,8 @@ export type AdminSection =
   | "products"
   | "orders"
   | "reviews"
-  | "deliveryRates";
+  | "deliveryRates"
+  | "settings";
 
 interface AdminSidebarProps {
   active: AdminSection;
@@ -32,6 +34,7 @@ const items: { id: AdminSection; label: string; icon: typeof LayoutDashboard }[]
   { id: "orders", label: "Commandes", icon: ShoppingBag },
   { id: "reviews", label: "Avis", icon: Star },
   { id: "deliveryRates", label: "Livraison", icon: Truck },
+  { id: "settings", label: "Paramètres", icon: Settings },
 ];
 
 export function AdminSidebar({ active, onChange, onSignOut }: AdminSidebarProps) {

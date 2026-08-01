@@ -25,7 +25,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/admin/dashboard", req.url));
     }
     
-    // 💡 THE MAGIC TRICK:
+    // THE MAGIC TRICK:
     // Keep "/admin/portal-97x-login" in the browser URL, but internally render "/admin/login"
     return NextResponse.rewrite(new URL(ACTUAL_LOGIN_FOLDER, req.url));
   }
