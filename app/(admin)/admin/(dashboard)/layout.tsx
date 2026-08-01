@@ -18,6 +18,7 @@ export default function DashboardLayout({
   const getActiveSection = (): AdminSection => {
     if (pathname === "/admin/dashboard") return "dashboard";
     if (pathname.startsWith("/admin/products")) return "products";
+    if (pathname.startsWith("/admin/category")) return "category";
     if (pathname.startsWith("/admin/orders")) return "orders";
     if (pathname.startsWith("/admin/reviews")) return "reviews";
     if (pathname.startsWith("/admin/delivery")) return "deliveryRates";
@@ -31,6 +32,7 @@ export default function DashboardLayout({
     const routes: Record<AdminSection, string> = {
       dashboard: "/admin",
       products: "/admin/products",
+      category: "/admin/category",
       orders: "/admin/orders",
       reviews: "/admin/reviews",
       deliveryRates: "/admin/delivery-rates",
