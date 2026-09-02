@@ -36,13 +36,16 @@ SKN Studio is a guest-only e-commerce storefront — there are no customer accou
 ![Admin Dashboard](https://user-images.githubusercontent.com/your-username/xxxxx/admin-dashboard.png)
 
 ### Product Management
-![Product Management](https://user-images.githubusercontent.com/your-username/xxxxx/admin-products.png)
+![Product Management](https://github-production-user-asset-6210df.s3.amazonaws.com/159056029/645000636-4c76dbcc-6c97-4d53-8d3f-af5eabec2fd4.png)
+
+### Categories Management
+![Categories Management](https://github-production-user-asset-6210df.s3.amazonaws.com/159056029/645000844-60b14946-8a86-4993-a674-787463d58675.png)
 
 ### Reviews Management
-![Reviews Management](https://user-images.githubusercontent.com/your-username/xxxxx/admin-orders.png)
+![Reviews Management](https://github-production-user-asset-6210df.s3.amazonaws.com/159056029/645000806-5f64dd99-e95d-448d-bc12-7575b6222db4.png))
 
 ### Settings Management
-![Settings Management](https://user-images.githubusercontent.com/your-username/xxxxx/admin-orders.png)
+![Settings Management](https://github-production-user-asset-6210df.s3.amazonaws.com/159056029/645000721-26597414-85b8-405c-9aeb-5d6536c8b9f1.png))
 
 ---
 ## Tech Stack
