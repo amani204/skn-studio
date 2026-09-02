@@ -25,9 +25,8 @@ SKN Studio is a guest-only e-commerce storefront — there are no customer accou
 - **Admin** manages products, stock, orders, delivery pricing per wilaya, and review moderation
 
 ---
----
 
-## 📸 Admin Dashboard Screenshots
+## Admin Dashboard Screenshots
 
 ### Dashboard Overview
 
