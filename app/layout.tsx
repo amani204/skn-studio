@@ -14,9 +14,11 @@ const inter = Inter({
   weight: ["400", "500", "600"],
   variable: "--font-inter",
 });
-
 export const metadata: Metadata = {
-  title: "SKN Studio",
+  title: {
+    default: "SKN Studio",
+    template: "%s | SKN Studio",
+  },
   description: "Skincare, considered.",
 };
 

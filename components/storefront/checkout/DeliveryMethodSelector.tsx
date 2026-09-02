@@ -1,5 +1,4 @@
 "use client";
-
 type Props = {
   selectedRate: { homePrice: number; deskPrice: number } | null;
   value: "HOME" | "DESK";

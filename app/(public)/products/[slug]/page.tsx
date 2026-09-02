@@ -16,20 +16,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const data = await getProductDetail(slug);
 
   if (!data) {
-    return { title: "Product not found" };
+    return { title: "Produit introuvable | SKN Studio" };
   }
 
   return {
-    title: data.product.name,
+    title: `${data.product.name} | SKN Studio`,
     description: data.product.description.slice(0, 155),
     openGraph: {
-      title: data.product.name,
+      title: `${data.product.name} | SKN Studio`,
       description: data.product.description.slice(0, 155),
       images: data.product.images[0] ? [data.product.images[0]] : [],
     },
   };
 }
-
 export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const data = await getProductDetail(slug);
