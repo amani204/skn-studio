@@ -4,7 +4,7 @@
 
 ### Full-Stack E-Commerce Platform for Guest-Only Skincare Retail
 
-A production-ready platform built for a real client — guest checkout with Cash on Delivery,
+A production-ready platform built for a real clients — guest checkout with Cash on Delivery,
 wilaya-based shipping, and WhatsApp ordering, purpose-built for the Algerian market.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-4ade80?style=for-the-badge)](https://skn-studio-project.vercel.app/)<br>
@@ -29,23 +29,27 @@ SKN Studio is a guest-only e-commerce storefront — there are no customer accou
 
 ## 📸 Admin Dashboard Screenshots
 
-### Login Page
-![Admin Login](https://user-images.githubusercontent.com/your-username/xxxxx/admin-dashboard.png)
-
 ### Dashboard Overview
-![Admin Dashboard](https://user-images.githubusercontent.com/your-username/xxxxx/admin-dashboard.png)
+
+![Admin Login](public/screenshots/login.png)
+
+![Admin Dashboard](public/screenshots/overview.png)
+*The admin dashboard provides at-a-glance metrics and quick access to all management features.*
 
 ### Product Management
-![Product Management](https://github-production-user-asset-6210df.s3.amazonaws.com/159056029/645000636-4c76dbcc-6c97-4d53-8d3f-af5eabec2fd4.png)
+![Product Management](public/screenshots/products.png)
+*Full CRUD operations with multi-image uploads, stock control, pricing, and featured product management. The featured flag is capped at 4 products server-side.*
+
 
 ### Categories Management
-![Categories Management](https://github-production-user-asset-6210df.s3.amazonaws.com/159056029/645000844-60b14946-8a86-4993-a674-787463d58675.png)
+![Categories Management](public/screenshots/categories.png)
 
 ### Reviews Management
-![Reviews Management](https://github-production-user-asset-6210df.s3.amazonaws.com/159056029/645000806-5f64dd99-e95d-448d-bc12-7575b6222db4.png))
+![Reviews Management](public/screenshots/reviews.png)
+*Moderate customer reviews before they appear publicly. Approve, reject, or delete reviews directly from the admin panel.*
 
-### Settings Management
-![Settings Management](https://github-production-user-asset-6210df.s3.amazonaws.com/159056029/645000721-26597414-85b8-405c-9aeb-5d6536c8b9f1.png))
+### Settings
+![Settings](public/screenshots/settings.png)
 
 ---
 ## Tech Stack
